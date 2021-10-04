@@ -28,6 +28,7 @@
             }
         ],
         "no-shadow": 0,
-        "@typescript-eslint/no-shadow": ["error"]
+        "@typescript-eslint/no-shadow": ["error"],
+        "import/prefer-default-export": "warn"
     }
 }
