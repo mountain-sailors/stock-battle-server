@@ -1,15 +1,21 @@
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import { Sequelize } from 'sequelize';
+import { dotEnvType } from '../@types/dataType';
 
-dotenv.config();
+declare let process: {
+  env: dotEnvType;
+};
 
-const dbName = process.env.DB_NAME as string;
-const dbUser = process.env.DB_USER as string;
-const dbPassword = process.env.DB_PWD as string;
+const { DB_NAME, DB_USER, DB_PWD, DB_HOST, DB_PORT } = process.env;
 
-const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
-  host: process.env.DB_HOST,
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PWD, {
+  host: DB_HOST,
+  port: DB_PORT,
+  logging: console.log,
   dialect: 'mysql',
+  dialectOptions: {
+    ssl: 'Amazon RDS',
+  },
 });
 
 export default sequelize;
