@@ -30,7 +30,7 @@ UserGameHistory.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    inWin: {
+    isWin: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
     },

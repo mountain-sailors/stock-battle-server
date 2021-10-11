@@ -1,0 +1,353 @@
+openapi: 3.0.1
+
+info:
+  title: Stock Battle
+  description: Stock Battle API docs.
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+servers:
+- url: /
+
+tags:
+- name: user
+  description: 회원가입, 로그인 등
+- name: room
+  description: 방 생성, 방 리스트 등
+- name: user history
+  description: 유저 전적, 승률 정보 등
+- name: stock
+  description: 주식 정보 등
+- name: room dashboard
+  description: 게임 현황
+
+paths:
+  /user:
+    post:
+      tags:
+      - user
+      summary: Create user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                username:
+                  type: string
+      responses:
+        201:
+          description: Created
+          content: {}
+  /user/login:
+    post:
+      tags:
+      - user
+      summary: Logs user into the system
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Invalid email/password supplied
+          content: {}
+  /room:
+    post:
+      tags:
+      - room
+      summary: Create room
+      operationId: createRoom
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomRequest'
+        required: true
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  invitationCode:
+                    type: string
+        405:
+          description: Invalid input
+          content: {}
+    get:
+      tags:
+      - room
+      summary: My room list
+      operationId: getMyRoomList
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomResponse'
+  /room/invitation:
+    post:
+      tags:
+      - room
+      summary: Add room to my room list (invitation code)
+      operationId: enterRoomByInvitation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                invitationCode:
+                  type: string
+      responses:
+        200:
+          description: 방 리스트에 invitation 코드로 방 추가
+        405:
+          description: Invalid input
+          content: {}
+
+
+  /user/{userId}/history:
+    get:
+      tags:
+      - user history
+      summary: User game history
+      operationId: getUserHistory
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserHistory'
+        400:
+          description: Invalid ID supplied
+          content: {}
+        404:
+          description: user not found
+          content: {}
+  /room/stock:
+    get:
+      tags:
+      - room stock
+      summary: The list of stocks registered by room users
+      operationId: getRoomStock
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserStock'
+    post:
+      tags:
+      - room stock
+      summary: Register stock
+      operationId: registerStock
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStock'
+      responses:
+        200:
+          description: successful operation
+        405:
+          description: Invalid input
+          content: {}
+  /stock:
+    get:
+      tags:
+      - stock
+      summary: The list of all stocks
+      operationId: getStockList
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stock'
+
+  /stock/{ticker}:
+    get:
+      tags:
+      - stock
+      summary: Search for ticker
+      operationId: getStockListByTicker
+      parameters:
+      - name: ticker
+        in: path
+        description: ticker로 주식 검색
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Stock'
+  /room/dashboard:
+    get:
+      tags:
+      - room dashboard
+      summary: Room dashboard
+      operationId: getRoomDashboard
+      responses:
+        200:
+          description: response 데이터 미정
+          content:
+            application/json:
+              schema:
+                type: object
+
+
+components:
+  schemas:
+    RoomRequest:
+      required:
+      - title
+      - maxCapacity
+      - startDate
+      - endDate
+      - winCondition
+      - invitationCode
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        maxCapacity:
+          type: integer
+          format: int64
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        winCondition:
+          type: string
+          enum:
+          - RETURN_RATE
+          - FLUCTUATION
+          - TOTAL_RETURN
+        invitationCode:
+          type: string
+    RoomResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        endDate:
+          type: string
+          format: date
+        rank:
+          type: integer
+        profit:
+          type: integer
+        gameStatus:
+          type: string
+          enum:
+          - NOT_STARTED
+          - IN_PROGRESS
+          - COMPLETED
+          - CANCELLED
+    UserHistory:
+      required:
+      - username
+      - roomTitle
+      - stockTicker
+      - isWin
+      - rank
+      - profit
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        roomTitle:
+          type: string
+        stockTicker:
+          type: string
+        isWin:
+          type: boolean
+        rank:
+          type: integer
+        profit:
+          type: integer
+        winCondition:
+          type: string
+          enum:
+          - RETURN_RATE
+          - FLUCTUATION
+          - TOTAL_RETURN
+        roomMember:
+          type: array
+          items:
+            type: string
+    UserStock:
+      type: object
+      properties:
+        username:
+          type: string
+        roomId:
+          type: integer
+        stockTicker:
+          type: string
+        amount:
+          type: integer
+        currentPrice:
+          type: integer
+    Stock:
+      type: object
+      properties:
+        ticker:
+          type: string
+        price:
+          type: integer
