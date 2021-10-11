@@ -1,4 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
+import GameStatusType from '../@types/GameStatusType';
 import WinConditionType from '../@types/WinConditionType';
 import sequelize from './index';
 
@@ -17,7 +18,7 @@ class Room extends Model {
 
   public invitationCode!: string;
 
-  public isEnd!: boolean;
+  public gameStatus!: GameStatusType;
 
   public ownerId!: number;
 
@@ -50,8 +51,8 @@ Room.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    isEnd: {
-      type: DataTypes.BOOLEAN,
+    gameStatus: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     userStocks: {
