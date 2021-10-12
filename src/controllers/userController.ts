@@ -3,18 +3,13 @@ import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import StatusCode from '../@types/statusCode';
-import User from '../models/User';
+import userService from '../services/userService';
 
 const createAccount = (req: Request, res: Response) => {
   try {
-    const { username, email, password } = req.body;
-    User.create({
-      username,
-      email,
-      password,
-      point: 0,
-    });
-    return res.status(StatusCode.OK).json('user created');
+    const { username, email, password, avatar } = req.body;
+    userService.createUser(username, email, password, avatar);
+    return res.status(StatusCode.OK).json('Created');
   } catch (err) {
     console.error(err);
     return res.status(StatusCode.SERVER_ERROR).json('Error occured');
@@ -52,10 +47,10 @@ const check = (req: Request, res: Response) => {
   res.json(req.decoded);
 };
 
-const authController = {
+const userController = {
   createAccount,
   login,
   check,
 };
 
-export default authController;
+export default userController;
