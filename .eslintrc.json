@@ -29,6 +29,8 @@
         ],
         "no-shadow": 0,
         "@typescript-eslint/no-shadow": ["error"],
-        "import/prefer-default-export": "warn"
+        "import/prefer-default-export": "warn",
+        "consistent-return": "warn",
+        "no-unused-vars": "warn"
     }
 }
