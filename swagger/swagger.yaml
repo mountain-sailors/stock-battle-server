@@ -61,7 +61,7 @@ paths:
             schema:
               type: object
               properties:
-                username:
+                email:
                   type: string
                 password:
                   type: string
@@ -103,7 +103,10 @@ paths:
           content:
             application/json:
               schema:
-                type: boolean
+                type: object
+                properties:
+                  isEmailExist:
+                    type: boolean
 
   /user/{username}:
     get:
@@ -126,10 +129,14 @@ paths:
                 type: array
                 items:
                   properties:
-                    userId:
+                    id:
                       type: integer
                     username:
                       type: string
+                    email:
+                      type: string
+                    point:
+                      type: integer
                     avatar:
                       type: string
 
