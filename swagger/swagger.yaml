@@ -8,7 +8,7 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-- url: /
+- url: /api/
 
 tags:
 - name: user
@@ -42,9 +42,11 @@ paths:
                   type: string
                 username:
                   type: string
+                avatar:
+                  type: string
       responses:
-        201:
-          description: Created
+        200:
+          description: User Created
           content: {}
   /user/login:
     post:
@@ -59,16 +61,78 @@ paths:
             schema:
               type: object
               properties:
-                email:
+                username:
                   type: string
                 password:
                   type: string
       responses:
         200:
           description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  token:
+                    type: string
         400:
           description: Invalid email/password supplied
           content: {}
+  /user/validation:
+    post:
+      tags:
+      - user
+      summary: Check for duplicate email address
+      operationId: emailValidationCheck
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /user/{username}:
+    get:
+      tags:
+      - user
+      summary: Search for user
+      operationId: searchUser
+      parameters:
+      - name: username
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    userId:
+                      type: integer
+                    username:
+                      type: string
+                    avatar:
+                      type: string
+
   /room:
     post:
       tags:
@@ -83,7 +147,7 @@ paths:
         required: true
       responses:
         200:
-          description: successful operation
+          description: successful opperation
           content:
             application/json:
               schema:
@@ -93,13 +157,10 @@ paths:
                     type: integer
                   invitationCode:
                     type: string
-        405:
-          description: Invalid input
-          content: {}
     get:
       tags:
       - room
-      summary: My room list
+      summary: Get my room list
       operationId: getMyRoomList
       responses:
         200:
@@ -127,12 +188,16 @@ paths:
       responses:
         200:
           description: 방 리스트에 invitation 코드로 방 추가
-        405:
-          description: Invalid input
-          content: {}
+        403:
+          description: 방이 꽉차서 들어갈 수 없음
+        404:
+          description: 방이 존재하지 않음
+        410:
+          description: 방에 더 이상 들어갈 수 없음 (게임 시작 등)
 
 
-  /user/{userId}/history:
+
+  /user/history/{userId}:
     get:
       tags:
       - user history
@@ -157,14 +222,34 @@ paths:
           description: Invalid ID supplied
           content: {}
         404:
-          description: user not found
+          description: User not found
           content: {}
-  /room/stock:
-    get:
+  /user-stock:
+    post:
       tags:
-      - room stock
-      summary: The list of stocks registered by room users
-      operationId: getRoomStock
+      - user stock
+      summary: Register stock
+      operationId: registerStock
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserStockRequest'
+      responses:
+        200:
+          description: successful operation
+  /user-stock/{roomId}:
+     get:
+      tags:
+      - user stock
+      summary: The list of stocks registered by users in room
+      operationId: getUserStock
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
       responses:
         200:
           description: successful operation
@@ -173,23 +258,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserStock'
-    post:
-      tags:
-      - room stock
-      summary: Register stock
-      operationId: registerStock
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserStock'
-      responses:
-        200:
-          description: successful operation
-        405:
-          description: Invalid input
-          content: {}
+                  $ref: '#/components/schemas/UserStockResponse'
   /stock:
     get:
       tags:
@@ -228,12 +297,18 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Stock'
-  /room/dashboard:
+  /room/dashboard/{roomId}:
     get:
       tags:
       - room dashboard
       summary: Room dashboard
       operationId: getRoomDashboard
+      parameters:
+      - name: roomId
+        in: path
+        required: true
+        schema:
+          type: integer
       responses:
         200:
           description: response 데이터 미정
@@ -252,12 +327,10 @@ components:
       - startDate
       - endDate
       - winCondition
-      - invitationCode
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        title:
+          type: string
         maxCapacity:
           type: integer
           format: int64
@@ -273,8 +346,10 @@ components:
           - RETURN_RATE
           - FLUCTUATION
           - TOTAL_RETURN
-        invitationCode:
-          type: string
+          description: |
+            * RETURN_RATE - 수익률
+            * FLUCTUATION - 변동률
+            * TOTAL_RETURN - 총수익 (최다 수익)
     RoomResponse:
       type: object
       properties:
@@ -282,6 +357,9 @@ components:
           type: integer
         title:
           type: string
+        startDate:
+          type: string
+          format: date
         endDate:
           type: string
           format: date
@@ -296,6 +374,11 @@ components:
           - IN_PROGRESS
           - COMPLETED
           - CANCELLED
+          description: |
+            * NOT_STARTED - 게임 시작 전
+            * IN_PROGRESS - 게임중
+            * COMPLETED - 게임 종료
+            * CANCELLED - 게임 취소 (기간 안에 주식 등록 안될 시)
     UserHistory:
       required:
       - username
@@ -327,17 +410,32 @@ components:
           - RETURN_RATE
           - FLUCTUATION
           - TOTAL_RETURN
+          description: |
+            * RETURN_RATE - 수익률
+            * FLUCTUATION - 변동률
+            * TOTAL_RETURN - 총수익 (최다 수익)
         roomMember:
           type: array
           items:
             type: string
-    UserStock:
+    UserStockRequest:
       type: object
       properties:
-        username:
-          type: string
+        userId:
+          type: integer
         roomId:
           type: integer
+        stockTicker:
+          type: string
+        amount:
+          type: integer
+    UserStockResponse:
+      type: object
+      properties:
+        userId:
+          type: integer
+        username:
+          type: string
         stockTicker:
           type: string
         amount:
