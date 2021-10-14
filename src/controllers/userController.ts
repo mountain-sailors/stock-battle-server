@@ -9,6 +9,7 @@ const createAccount = (req: Request, res: Response) => {
   try {
     const { username, email, password, avatar } = req.body;
     userService.createUser(username, email, password, avatar);
+
     return res.status(StatusCode.OK).json('Created');
   } catch (err) {
     console.error(err);
@@ -46,8 +47,22 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 const emailValidation = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email } = req.body;
-    const emailExist = await userService.isUserExist(email);
-    return res.status(StatusCode.OK).json(emailExist);
+    const users = await userService.findUsers('email', email);
+    const isEmailExist = users.length !== 0;
+
+    return res.status(StatusCode.OK).json(isEmailExist);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
+const searchUsers = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { username } = req.params;
+    const users = await userService.searchUsers(username);
+
+    return res.status(StatusCode.OK).json(users);
   } catch (error) {
     console.error(error);
     return next(error);
@@ -62,6 +77,7 @@ const userController = {
   createAccount,
   login,
   emailValidation,
+  searchUsers,
   check,
 };
 
