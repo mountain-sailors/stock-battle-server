@@ -9,7 +9,7 @@ const JWTStrategy = passportJWT.Strategy;
 const { ExtractJwt } = passportJWT;
 
 const LocalStrategyOption = {
-  emailField: 'email@email.com',
+  usernameField: 'email',
   passwordField: 'password',
 };
 
