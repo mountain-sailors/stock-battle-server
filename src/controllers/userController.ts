@@ -43,6 +43,17 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const emailValidation = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    const emailExist = await userService.isUserExist(email);
+    return res.status(StatusCode.OK).json(emailExist);
+  } catch (error) {
+    console.error(error);
+    return next(error);
+  }
+};
+
 const check = (req: Request, res: Response) => {
   res.json(req.decoded);
 };
@@ -50,6 +61,7 @@ const check = (req: Request, res: Response) => {
 const userController = {
   createAccount,
   login,
+  emailValidation,
   check,
 };
 
