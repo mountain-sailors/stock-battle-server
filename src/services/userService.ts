@@ -10,6 +10,15 @@ const createUser = (username: string, email: string, password: string, avatar: s
   });
 };
 
+const findUser = async (column: string, value: string) => {
+  const user = await User.findOne({
+    where: {
+      [column]: value,
+    },
+  });
+  return user;
+};
+
 const findUsers = async (column: string, value: string) => {
   const users = await User.findAll({
     where: {
@@ -36,6 +45,7 @@ const searchUsers = async (param: string) => {
 
 const userService = {
   createUser,
+  findUser,
   findUsers,
   searchUsers,
 };

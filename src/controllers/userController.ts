@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
 import StatusCode from '../@types/statusCode';
@@ -17,7 +17,7 @@ const createAccount = (req: Request, res: Response) => {
   }
 };
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response) => {
   try {
     // 아까 local로 등록한 인증과정 실행
     return passport.authenticate('local', { session: false }, (passportErr, user) => {
@@ -47,10 +47,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 const emailValidation = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    const users = await userService.findUsers('email', email);
-    const isEmailExist = users.length !== 0;
+    const user = await userService.findUser('email', email);
+    const isEmailExist = user !== null;
 
-    return res.status(StatusCode.OK).json(isEmailExist);
+    return res.status(StatusCode.OK).json({ isEmailExist });
   } catch (error) {
     console.error(error);
     return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');

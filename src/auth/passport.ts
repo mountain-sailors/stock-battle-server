@@ -3,28 +3,29 @@ import { JwtPayload } from 'jsonwebtoken';
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
-import User from '../models/User';
+import userService from '../services/userService';
 
 const JWTStrategy = passportJWT.Strategy;
 const { ExtractJwt } = passportJWT;
 
 const LocalStrategyOption = {
-  usernameField: 'username',
+  emailField: 'email@email.com',
   passwordField: 'password',
 };
 
-const localVerify = async (username: string, password: string, done: Function) => {
+const localVerify = async (email: string, password: string, done: Function) => {
   try {
-    const user = await User.findOne({ where: { username } });
+    const user = await userService.findUser('email', email);
     // 유저 확인
     if (!user) {
-      done(null, false, { reason: 'user does not exist' });
+      done(null, false, { reason: 'User does not exist' });
       return;
     }
-    // 비밀번호 확인 (추후 추가)
     // 비밀번호 다를 경우
-    // done(null, false, { reason: 'Invalid Password' });
-
+    if (password !== user.password) {
+      done(null, false, { reason: 'Invalid Password' });
+      return;
+    }
     // 확인완료시 유저 데이터 객체 전송
     done(null, user);
     return;
@@ -41,7 +42,7 @@ const jwtStrategyOption = {
 
 const jwtVerify = async (jwtPayload: JwtPayload, done: Function) => {
   try {
-    const user = await User.findOne({ where: { id: jwtPayload.id } });
+    const user = await userService.findUser('id', jwtPayload.id);
     if (user) {
       return done(null, user);
     }
