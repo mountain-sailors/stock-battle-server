@@ -36,7 +36,7 @@ const localVerify = async (email: string, password: string, done: Function) => {
 };
 
 const jwtStrategyOption = {
-  jwtFromRequest: ExtractJwt.fromHeader('authorization'),
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
   secretOrKey: process.env.JWT_SECRET,
 };
 
