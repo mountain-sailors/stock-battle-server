@@ -1,4 +1,6 @@
+import { QueryTypes } from 'sequelize';
 import WinConditionType from '../@types/WinConditionType';
+import sequelize from '../models';
 import Room from '../models/Room';
 import UserStock from '../models/UserStock';
 import generateInvitationCode from '../utils/generateInvitationCode';
@@ -34,9 +36,18 @@ const createRoom = async (
   return body;
 };
 
+const getMyRoomList = async (userId: number) => {
+  const myRoomList = await sequelize.query(
+    `SELECT r.id, r.title, r.startDate, r.endDate, r.gameStatus FROM room as r INNER JOIN user_stock as u ON r.id = u.roomId WHERE u.userId=${userId}`,
+    { type: QueryTypes.SELECT },
+  );
+  console.log(myRoomList);
+  return myRoomList;
+};
+
 const roomService = {
   createRoom,
-  // getMyRoomList,
+  getMyRoomList,
   // enterRoomByInvitation,
 };
 

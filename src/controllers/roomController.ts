@@ -14,9 +14,20 @@ const createRoom = async (req: Request, res: Response) => {
   }
 };
 
+const getMyRoomList = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.decoded;
+    const body = await roomService.getMyRoomList(userId);
+    return res.status(StatusCode.OK).json(body);
+  } catch (err) {
+    console.log(err);
+    return res.status(StatusCode.SERVER_ERROR).json();
+  }
+};
+
 const roomController = {
   createRoom,
-  // getMyRoomList,
+  getMyRoomList,
   // enterRoomByInvitation,
 };
 
