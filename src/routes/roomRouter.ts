@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.post('/', verifyToken, roomController.createRoom);
 router.get('/', verifyToken, roomController.getMyRoomList);
+router.post('/invitation', verifyToken, roomController.enterRoomByInvitation);
 
 export default router;

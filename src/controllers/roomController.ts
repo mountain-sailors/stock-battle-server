@@ -25,10 +25,21 @@ const getMyRoomList = async (req: Request, res: Response) => {
   }
 };
 
+const enterRoomByInvitation = async (req: Request, res: Response) => {
+  try {
+    const { invitationCode } = req.body;
+    const { userId } = req.decoded;
+    await roomService.enterRoomByInvitation(invitationCode, userId);
+    return res.status(StatusCode.OK).json();
+  } catch (err) {
+    return res.status(StatusCode.SERVER_ERROR).json();
+  }
+};
+
 const roomController = {
   createRoom,
   getMyRoomList,
-  // enterRoomByInvitation,
+  enterRoomByInvitation,
 };
 
 export default roomController;

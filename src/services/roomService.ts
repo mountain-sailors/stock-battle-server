@@ -1,4 +1,5 @@
 import { QueryTypes } from 'sequelize';
+import GameStatusType from '../@types/GameStatusType';
 import WinConditionType from '../@types/WinConditionType';
 import sequelize from '../models';
 import Room from '../models/Room';
@@ -45,10 +46,30 @@ const getMyRoomList = async (userId: number) => {
   return myRoomList;
 };
 
+const enterRoomByInvitation = async (invitationCode: string, userId: number) => {
+  const room = await Room.findOne({
+    where: {
+      invitationCode,
+    },
+  });
+  if (!room) throw new Error('No such room');
+  if (room.gameStatus !== GameStatusType.NOT_STARTED) throw new Error('Cannot enter room');
+  const capacity = await UserStock.count({
+    where: {
+      roomId: room.id,
+    },
+  });
+  if (room.maxCapacity === capacity) throw new Error('The room is full');
+  UserStock.create({
+    userId,
+    roomId: room.id,
+  });
+};
+
 const roomService = {
   createRoom,
   getMyRoomList,
-  // enterRoomByInvitation,
+  enterRoomByInvitation,
 };
 
 export default roomService;
