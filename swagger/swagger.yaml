@@ -108,7 +108,7 @@ paths:
                   isEmailExist:
                     type: boolean
 
-  /user/{username}:
+  /user/search?username=admin:
     get:
       tags:
       - user
@@ -116,7 +116,7 @@ paths:
       operationId: searchUser
       parameters:
       - name: username
-        in: path
+        in: query
         required: true
         schema:
           type: string

@@ -59,8 +59,8 @@ const emailValidation = async (req: Request, res: Response) => {
 
 const searchUsers = async (req: Request, res: Response) => {
   try {
-    const { username } = req.params;
-    const users = await userService.searchUsers(username);
+    const { username } = req.query;
+    const users = await userService.searchUsers(<string>username);
 
     return res.status(StatusCode.OK).json(users);
   } catch (error) {
