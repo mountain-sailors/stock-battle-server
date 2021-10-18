@@ -16,7 +16,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     const { authorization } = req.headers;
     const { JWT_SECRET } = process.env;
 
-    req.decoded = jwt.verify(authorization!, JWT_SECRET!);
+    req.decoded = jwt.verify(authorization?.split('Bearer')[1]!, JWT_SECRET!);
 
     return next();
   } catch (error) {
