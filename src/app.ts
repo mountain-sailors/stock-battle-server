@@ -4,7 +4,7 @@ import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import passportConfig from './auth/passport';
-import stockScheduler from './jobs/stockScheduler';
+import initScheduler from './jobs';
 import sequelize from './models';
 import router from './routes';
 
@@ -38,7 +38,8 @@ passportConfig();
 
 app.use('/api', router);
 
-stockScheduler();
+// scheduler
+initScheduler();
 
 app.listen(app.get('port'), () => {
   console.log(app.get('port'), '번 포트에서 실행중');
