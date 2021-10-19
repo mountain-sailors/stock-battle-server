@@ -8,7 +8,7 @@ class UserStock extends Model {
 
   public roomId!: number;
 
-  public stockId!: number;
+  public ticker!: string;
 
   public amount!: number;
 }
@@ -28,8 +28,8 @@ UserStock.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    stockId: {
-      type: DataTypes.INTEGER,
+    ticker: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
     amount: {
