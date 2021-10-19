@@ -250,7 +250,7 @@ paths:
       tags:
       - user stock
       summary: The list of stocks registered by users in room
-      operationId: getUserStock
+      operationId: getUserStocks
       parameters:
       - name: roomId
         in: path
@@ -428,11 +428,9 @@ components:
     UserStockRequest:
       type: object
       properties:
-        userId:
-          type: integer
         roomId:
           type: integer
-        stockTicker:
+        ticker:
           type: string
         amount:
           type: integer
@@ -443,11 +441,11 @@ components:
           type: integer
         username:
           type: string
-        stockTicker:
+        ticker:
           type: string
         amount:
           type: integer
-        currentPrice:
+        price:
           type: integer
     Stock:
       type: object
