@@ -1,8 +1,11 @@
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 import Stock from '../models/Stock';
 
 const findStocks = async () => {
-  const stocks = await Stock.findAll({ raw: true });
+  const stocks = await Stock.findAll({
+    attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('ticker')), 'ticker'], 'price'],
+    raw: true,
+  });
   return stocks;
 };
 
