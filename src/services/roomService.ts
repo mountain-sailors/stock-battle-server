@@ -42,7 +42,6 @@ const getMyRoomList = async (userId: number) => {
     `SELECT r.id, r.title, r.startDate, r.endDate, r.gameStatus FROM room as r INNER JOIN user_stock as u ON r.id = u.roomId WHERE u.userId=${userId}`,
     { type: QueryTypes.SELECT },
   );
-  console.log(myRoomList);
   return myRoomList;
 };
 
