@@ -22,11 +22,16 @@ class Room extends Model {
 
   public ownerId!: number;
 
-  public userStocks!: Array<number>;
+  // public userStocks!: Array<number>;
 }
 
 Room.init(
   {
+    id: {
+      type: DataTypes.INTEGER.UNSIGNED,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -50,15 +55,17 @@ Room.init(
     invitationCode: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     gameStatus: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
-    userStocks: {
-      type: DataTypes.JSON,
-      allowNull: false,
-    },
+    // userStocks: {
+    //   type: DataTypes.JSON,
+    //   allowNull: false,
+    // },
   },
   {
     sequelize,
