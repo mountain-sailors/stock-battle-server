@@ -202,7 +202,7 @@ paths:
         410:
           description: 방에 더 이상 들어갈 수 없음 (게임 시작 등)
 
-  /gmae-history/{userId}:
+  /game-history/{userId}:
     get:
       tags:
         - user history
