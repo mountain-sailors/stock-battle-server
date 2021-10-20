@@ -445,8 +445,6 @@ components:
           type: string
         amount:
           type: integer
-        price:
-          type: integer
     Stock:
       type: object
       properties:
