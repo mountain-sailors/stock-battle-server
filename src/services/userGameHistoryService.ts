@@ -2,7 +2,7 @@ import UserGameHistory from '../models/UserGameHistory';
 import roomService from './roomService';
 
 const findGameHistory = async (column: string, value: number, attributes: string[]) => {
-  const history = await UserGameHistory.findOne({
+  const history = await UserGameHistory.findAll({
     attributes,
     where: {
       [column]: value,
@@ -11,7 +11,8 @@ const findGameHistory = async (column: string, value: number, attributes: string
   return history;
 };
 
-const getGameHistory = async (userId: string) => {
+const getGameHistory = async (id: string) => {
+  const userId: string = id.split(':')[1];
   const idValue: number = +userId;
 
   // req.decoded에서 조회: username
