@@ -108,7 +108,7 @@ paths:
                   isEmailExist:
                     type: boolean
 
-  /user/{username}:
+  /user/search?username=admin:
     get:
       tags:
         - user
@@ -116,7 +116,7 @@ paths:
       operationId: searchUser
       parameters:
         - name: username
-          in: path
+          in: query
           required: true
           schema:
             type: string
@@ -248,7 +248,7 @@ paths:
       tags:
         - user stock
       summary: The list of stocks registered by users in room
-      operationId: getUserStock
+      operationId: getUserStocks
       parameters:
         - name: roomId
           in: path
@@ -280,7 +280,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Stock'
 
-  /stock/{ticker}:
+  /stock/search?ticker=AAPL:
     get:
       tags:
         - stock
@@ -288,7 +288,7 @@ paths:
       operationId: getStockListByTicker
       parameters:
         - name: ticker
-          in: path
+          in: query
           description: ticker로 주식 검색
           required: true
           schema:
@@ -425,11 +425,9 @@ components:
     UserStockRequest:
       type: object
       properties:
-        userId:
-          type: integer
         roomId:
           type: integer
-        stockTicker:
+        ticker:
           type: string
         amount:
           type: integer
@@ -440,11 +438,9 @@ components:
           type: integer
         username:
           type: string
-        stockTicker:
+        ticker:
           type: string
         amount:
-          type: integer
-        currentPrice:
           type: integer
     Stock:
       type: object

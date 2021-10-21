@@ -6,8 +6,6 @@ class Stock extends Model {
 
   public ticker!: string;
 
-  public time!: Date;
-
   public price!: number;
 }
 
@@ -22,12 +20,8 @@ Stock.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    time: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     price: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
   },

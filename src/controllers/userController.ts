@@ -34,7 +34,11 @@ const login = async (req: Request, res: Response) => {
         }
 
         // 토큰 생성
-        const token = jwt.sign({ userEmail: user.email }, process.env.JWT_SECRET!, { expiresIn: '7d' });
+        const token = jwt.sign(
+          { userId: user.id, username: user.username, userEmail: user.email },
+          process.env.JWT_SECRET!,
+          { expiresIn: '7d' },
+        );
         return res.status(StatusCode.OK).json({ success: true, message: 'Login Success', token });
       });
     })(req, res);
@@ -59,8 +63,8 @@ const emailValidation = async (req: Request, res: Response) => {
 
 const searchUsers = async (req: Request, res: Response) => {
   try {
-    const { username } = req.params;
-    const users = await userService.searchUsers(username);
+    const { username } = req.query;
+    const users = await userService.searchUsers(<string>username);
 
     return res.status(StatusCode.OK).json(users);
   } catch (error) {
