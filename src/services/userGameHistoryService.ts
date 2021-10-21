@@ -1,13 +1,19 @@
-import UserGameHistory from '../models/UserGameHistory';
-import roomService from './roomService';
+import { QueryTypes } from 'sequelize';
+import sequelize from '../models';
 
-const findGameHistory = async (column: string, value: number, attributes: string[]) => {
-  const history = await UserGameHistory.findAll({
-    attributes,
-    where: {
-      [column]: value,
-    },
-  });
+const findGameHistory = async (userId: number) => {
+  const history = await sequelize.query(
+    `SELECT ugh.id, ugh.isWin, ugh.rank, ugh.profit,
+    r.winCondition, r.title,  r.startDate, r.endDate,
+    us.ticker
+    FROM user_game_history AS ugh
+    LEFT JOIN room AS r
+    ON ugh.roomId=r.id
+    LEFT JOIN user_stock AS us
+    ON ugh.roomId=us.roomId
+    WHERE us.userId=${userId};`,
+    { type: QueryTypes.SELECT },
+  );
   return history;
 };
 
@@ -15,22 +21,9 @@ const getGameHistory = async (id: string) => {
   const userId: string = id.split(':')[1];
   const idValue: number = +userId;
 
-  // req.decoded에서 조회: username
-  // { username } = req.decoded;
+  const gameHistory = await findGameHistory(idValue);
 
-  // userGameHistory에서 조회: isWin,rank,profit
-  // room에서 조회: winCondition,roomTitle
-  // userStock에서 조회: ticker
-  // roomMember -> 고민중...
-
-  const historyInfo = await findGameHistory('userId', idValue, ['roomId', 'isWin', 'rank', 'profit']);
-  console.log('history: ', historyInfo);
-  // roomId 는 historyInfo 에서 추출
-  const roomId = '1';
-  const roomInfo = await roomService.findRoom('roomId', roomId);
-  console.log('room: ', roomInfo);
-  // userStock ticker은 완성되면 service 에서 조회해오기
-  // roomMember 고민
+  return gameHistory;
 };
 
 const userGameHistoryService = {
