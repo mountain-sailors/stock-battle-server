@@ -22,13 +22,12 @@ const searchStocks = async (value: string) => {
   return stocks;
 };
 
-const updateStocks = async (tickers: string[], prices: object) => {
-  const pricesObj = JSON.parse(JSON.stringify(prices));
-  const stocks: any[] = [];
+const updateStocks = async (tickers: string[], prices: any) => {
+  const stocks: object[] = [];
   for (let i = 0; i < tickers.length; i += 1) {
     const tmp = {
       ticker: tickers[i],
-      price: pricesObj.data[i].price,
+      price: prices.data[i].price,
     };
     stocks.push(tmp);
   }
