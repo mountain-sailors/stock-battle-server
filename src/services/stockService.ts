@@ -3,7 +3,8 @@ import Stock from '../models/Stock';
 
 const findStocks = async () => {
   const stocks = await Stock.findAll({
-    attributes: [[Sequelize.fn('DISTINCT', Sequelize.col('ticker')), 'ticker'], 'price'],
+    attributes: [[Sequelize.fn('max', Sequelize.col('id')), 'id'], 'ticker', 'price'],
+    group: ['ticker'],
     raw: true,
   });
   return stocks;
@@ -11,11 +12,13 @@ const findStocks = async () => {
 
 const searchStocks = async (value: string) => {
   const stocks = await Stock.findAll({
+    attributes: [[Sequelize.fn('max', Sequelize.col('id')), 'id'], 'ticker', 'price'],
     where: {
       ticker: {
         [Op.like]: `%${value}%`,
       },
     },
+    group: ['ticker'],
     raw: true,
   });
 
