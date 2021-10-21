@@ -65,20 +65,10 @@ const enterRoomByInvitation = async (invitationCode: string, userId: number) => 
   });
 };
 
-const findRoom = async (column: string, value: string) => {
-  const room = await Room.findOne({
-    where: {
-      [column]: value,
-    },
-  });
-  return room;
-};
-
 const roomService = {
   createRoom,
   getMyRoomList,
   enterRoomByInvitation,
-  findRoom,
 };
 
 export default roomService;
