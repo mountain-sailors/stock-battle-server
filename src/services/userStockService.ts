@@ -19,7 +19,7 @@ const registerStock = async (roomId: number, ticker: string, amount: number, use
 
 const getUserStocks = async (roomId: number) => {
   const userStocks = await sequelize.query(
-    `SELECT u.id, u.username, us.ticker, us.amount FROM (SELECT * FROM user_stock WHERE roomId = ${roomId}) as us INNER JOIN user as u on us.userId=u.id`,
+    `SELECT u.id, u.username, us.ticker, us.amount FROM user_stock as us INNER JOIN user as u on us.userId=u.id WHERE roomId=${roomId}`,
     { type: QueryTypes.SELECT },
   );
   return userStocks;
