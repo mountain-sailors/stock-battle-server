@@ -8,25 +8,25 @@ externalDocs:
   description: Find out more about Swagger
   url: http://swagger.io
 servers:
-- url: /api/
+  - url: /api/
 
 tags:
-- name: user
-  description: 회원가입, 로그인 등
-- name: room
-  description: 방 생성, 방 리스트 등
-- name: user history
-  description: 유저 전적, 승률 정보 등
-- name: stock
-  description: 주식 정보 등
-- name: room dashboard
-  description: 게임 현황
+  - name: user
+    description: 회원가입, 로그인 등
+  - name: room
+    description: 방 생성, 방 리스트 등
+  - name: user history
+    description: 유저 전적, 승률 정보 등
+  - name: stock
+    description: 주식 정보 등
+  - name: room dashboard
+    description: 게임 현황
 
 paths:
   /user:
     post:
       tags:
-      - user
+        - user
       summary: Create user
       operationId: createUser
       requestBody:
@@ -51,7 +51,7 @@ paths:
   /user/login:
     post:
       tags:
-      - user
+        - user
       summary: Logs user into the system
       operationId: login
       requestBody:
@@ -85,7 +85,7 @@ paths:
   /user/validation:
     post:
       tags:
-      - user
+        - user
       summary: Check for duplicate email address
       operationId: emailValidationCheck
       requestBody:
@@ -108,18 +108,18 @@ paths:
                   isEmailExist:
                     type: boolean
 
-  /user/{username}:
+  /user/search?username=admin:
     get:
       tags:
-      - user
+        - user
       summary: Search for user
       operationId: searchUser
       parameters:
-      - name: username
-        in: path
-        required: true
-        schema:
-          type: string
+        - name: username
+          in: query
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: successful operation
@@ -143,7 +143,7 @@ paths:
   /room:
     post:
       tags:
-      - room
+        - room
       summary: Create room
       operationId: createRoom
       requestBody:
@@ -166,7 +166,7 @@ paths:
                     type: string
     get:
       tags:
-      - room
+        - room
       summary: Get my room list
       operationId: getMyRoomList
       responses:
@@ -181,7 +181,7 @@ paths:
   /room/invitation:
     post:
       tags:
-      - room
+        - room
       summary: Add room to my room list (invitation code)
       operationId: enterRoomByInvitation
       requestBody:
@@ -202,20 +202,18 @@ paths:
         410:
           description: 방에 더 이상 들어갈 수 없음 (게임 시작 등)
 
-
-
   /user/history/{userId}:
     get:
       tags:
-      - user history
+        - user history
       summary: User game history
       operationId: getUserHistory
       parameters:
-      - name: userId
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: successful operation
@@ -234,7 +232,7 @@ paths:
   /user-stock:
     post:
       tags:
-      - user stock
+        - user stock
       summary: Register stock
       operationId: registerStock
       requestBody:
@@ -246,17 +244,17 @@ paths:
         200:
           description: successful operation
   /user-stock/{roomId}:
-     get:
+    get:
       tags:
-      - user stock
+        - user stock
       summary: The list of stocks registered by users in room
       operationId: getUserStocks
       parameters:
-      - name: roomId
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: successful operation
@@ -269,7 +267,7 @@ paths:
   /stock:
     get:
       tags:
-      - stock
+        - stock
       summary: The list of all stocks
       operationId: getStockList
       responses:
@@ -282,19 +280,19 @@ paths:
                 items:
                   $ref: '#/components/schemas/Stock'
 
-  /stock/{ticker}:
+  /stock/search?ticker=AAPL:
     get:
       tags:
-      - stock
+        - stock
       summary: Search for ticker
       operationId: getStockListByTicker
       parameters:
-      - name: ticker
-        in: path
-        description: ticker로 주식 검색
-        required: true
-        schema:
-          type: string
+        - name: ticker
+          in: query
+          description: ticker로 주식 검색
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: successful operation
@@ -307,15 +305,15 @@ paths:
   /room/dashboard/{roomId}:
     get:
       tags:
-      - room dashboard
+        - room dashboard
       summary: Room dashboard
       operationId: getRoomDashboard
       parameters:
-      - name: roomId
-        in: path
-        required: true
-        schema:
-          type: integer
+        - name: roomId
+          in: path
+          required: true
+          schema:
+            type: integer
       responses:
         200:
           description: response 데이터 미정
@@ -324,16 +322,15 @@ paths:
               schema:
                 type: object
 
-
 components:
   schemas:
     RoomRequest:
       required:
-      - title
-      - maxCapacity
-      - startDate
-      - endDate
-      - winCondition
+        - title
+        - maxCapacity
+        - startDate
+        - endDate
+        - winCondition
       type: object
       properties:
         title:
@@ -350,9 +347,9 @@ components:
         winCondition:
           type: string
           enum:
-          - RETURN_RATE
-          - FLUCTUATION
-          - TOTAL_RETURN
+            - RETURN_RATE
+            - FLUCTUATION
+            - TOTAL_RETURN
           description: |
             * RETURN_RATE - 수익률
             * FLUCTUATION - 변동률
@@ -377,10 +374,10 @@ components:
         gameStatus:
           type: string
           enum:
-          - NOT_STARTED
-          - IN_PROGRESS
-          - COMPLETED
-          - CANCELLED
+            - NOT_STARTED
+            - IN_PROGRESS
+            - COMPLETED
+            - CANCELLED
           description: |
             * NOT_STARTED - 게임 시작 전
             * IN_PROGRESS - 게임중
@@ -388,12 +385,12 @@ components:
             * CANCELLED - 게임 취소 (기간 안에 주식 등록 안될 시)
     UserHistory:
       required:
-      - username
-      - roomTitle
-      - stockTicker
-      - isWin
-      - rank
-      - profit
+        - username
+        - roomTitle
+        - stockTicker
+        - isWin
+        - rank
+        - profit
       type: object
       properties:
         id:
@@ -414,9 +411,9 @@ components:
         winCondition:
           type: string
           enum:
-          - RETURN_RATE
-          - FLUCTUATION
-          - TOTAL_RETURN
+            - RETURN_RATE
+            - FLUCTUATION
+            - TOTAL_RETURN
           description: |
             * RETURN_RATE - 수익률
             * FLUCTUATION - 변동률

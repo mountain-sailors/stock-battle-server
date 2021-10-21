@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/', userController.createAccount);
 router.post('/login', userController.login);
 router.post('/validation', userController.emailValidation);
-router.get('/:username', verifyToken, userController.searchUsers);
+router.get('/search', verifyToken, userController.searchUsers);
 router.get('/check', verifyToken, userController.check);
 
 export default router;
