@@ -28,8 +28,7 @@ const findUsers = async (column: string, value: string) => {
   return users;
 };
 
-const searchUsers = async (param: string) => {
-  const value = param.split(':')[1];
+const searchUsers = async (value: string) => {
   const users = await User.findAll({
     attributes: ['id', 'username', 'email', 'point', 'avatar'],
     where: {
