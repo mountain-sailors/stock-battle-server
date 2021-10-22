@@ -17,11 +17,8 @@ const findGameHistory = async (userId: number) => {
   return history;
 };
 
-const getGameHistory = async (id: string) => {
-  const userId: string = id.split(':')[1];
-  const idValue: number = +userId;
-
-  const gameHistory = await findGameHistory(idValue);
+const getGameHistory = async (userId: number) => {
+  const gameHistory = await findGameHistory(userId);
 
   return gameHistory;
 };

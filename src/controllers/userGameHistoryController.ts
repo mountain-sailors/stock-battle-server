@@ -7,7 +7,7 @@ const findGameHistory = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
-    const gameHistory = await userGameHistoryService.getGameHistory(userId);
+    const gameHistory = await userGameHistoryService.getGameHistory(+userId);
 
     return res.status(StatusCode.OK).json(gameHistory);
   } catch (error) {
