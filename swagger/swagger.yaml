@@ -11,6 +11,8 @@ servers:
   - url: /api/
 
 tags:
+  - name: me
+    description: 유저네임, 유저이메일
   - name: user
     description: 회원가입, 로그인 등
   - name: room
@@ -23,6 +25,25 @@ tags:
     description: 게임 현황
 
 paths:
+  /me:
+    get:
+      tags:
+        - me
+      summary: Get my information
+      operationId: getMyInfo
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                  userEmail:
+                    type: string
+
   /user:
     post:
       tags:
