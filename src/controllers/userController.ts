@@ -51,7 +51,7 @@ const login = async (req: Request, res: Response) => {
 const emailValidation = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    const user = await userService.findUser('email', email);
+    const user = await userService.findUser('email', email, ['id']);
     const isEmailExist = user !== null;
 
     return res.status(StatusCode.OK).json({ isEmailExist });

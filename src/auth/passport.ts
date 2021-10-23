@@ -15,7 +15,7 @@ const LocalStrategyOption = {
 
 const localVerify = async (email: string, password: string, done: Function) => {
   try {
-    const user = await userService.findUser('email', email);
+    const user = await userService.findUser('email', email, ['id']);
     // 유저 확인
     if (!user) {
       done(null, false, { reason: 'User does not exist' });
@@ -42,7 +42,7 @@ const jwtStrategyOption = {
 
 const jwtVerify = async (jwtPayload: JwtPayload, done: Function) => {
   try {
-    const user = await userService.findUser('id', jwtPayload.id);
+    const user = await userService.findUser('id', jwtPayload.id, ['id']);
     if (user) {
       return done(null, user);
     }
