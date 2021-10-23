@@ -223,7 +223,7 @@ paths:
         410:
           description: 방에 더 이상 들어갈 수 없음 (게임 시작 등)
 
-  /user/history/{userId}:
+  /game-history/{userId}:
     get:
       tags:
         - user history
@@ -406,9 +406,8 @@ components:
             * CANCELLED - 게임 취소 (기간 안에 주식 등록 안될 시)
     UserHistory:
       required:
-        - username
-        - roomTitle
-        - stockTicker
+        - title
+        - ticker
         - isWin
         - rank
         - profit
@@ -417,12 +416,6 @@ components:
         id:
           type: integer
           format: int64
-        username:
-          type: string
-        roomTitle:
-          type: string
-        stockTicker:
-          type: string
         isWin:
           type: boolean
         rank:
@@ -430,6 +423,16 @@ components:
         profit:
           type: integer
         winCondition:
+          type: string
+        title:
+          type: string
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        ticker:
           type: string
           enum:
             - RETURN_RATE
@@ -439,10 +442,6 @@ components:
             * RETURN_RATE - 수익률
             * FLUCTUATION - 변동률
             * TOTAL_RETURN - 총수익 (최다 수익)
-        roomMember:
-          type: array
-          items:
-            type: string
     UserStockRequest:
       type: object
       properties:
