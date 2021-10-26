@@ -10,11 +10,13 @@ const createUser = (username: string, email: string, password: string, avatar: s
   });
 };
 
-const findUser = async (column: string, value: string) => {
+const findUser = async (column: string, value: string, attributes: string[]) => {
   const user = await User.findOne({
+    attributes,
     where: {
       [column]: value,
     },
+    raw: true,
   });
   return user;
 };
