@@ -1,7 +1,30 @@
 import { Op, Sequelize } from 'sequelize';
 import GameStatusType from '../@types/GameStatusType';
 import Room from '../models/Room';
+import Stock from '../models/Stock';
 import UserStock from '../models/UserStock';
+
+const getInitialPrices = async () => {
+  // 가장 최근 가격이 장 시작 가격이라는 것을 보장할 수 있을지는 잘 모르겠음 -> 다음에 체크해보기
+  const stocks = await Stock.findAll({
+    attributes: ['ticker', 'price', [Sequelize.fn('max', Sequelize.col('createdAt')), 'createdAt']],
+    group: ['ticker'],
+  });
+  const stockMap = new Map<string, number>();
+  stocks.forEach((stock) => stockMap.set(stock.ticker, stock.price));
+  return stockMap;
+};
+
+const setInitialPrice = async (roomIdList: Array<number>) => {
+  const stocks = await getInitialPrices();
+  console.log(getInitialPrices);
+  const userStocks = await UserStock.findAll({
+    where: {
+      roomId: roomIdList,
+    },
+  });
+  userStocks.forEach((userStock) => userStock.update({ initialPrice: stocks.get(userStock.ticker) }));
+};
 
 const startRoom = async (roomIdList: Array<number>, cancelled: Array<number>) => {
   const started = roomIdList.filter((t) => !cancelled.includes(t));
@@ -15,6 +38,7 @@ const startRoom = async (roomIdList: Array<number>, cancelled: Array<number>) =>
       },
     },
   );
+  setInitialPrice(started);
 };
 
 const cancelRoom = async (roomIdList: Array<number>) => {
