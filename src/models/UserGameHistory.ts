@@ -39,7 +39,7 @@ UserGameHistory.init(
       allowNull: false,
     },
     profit: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
   },
