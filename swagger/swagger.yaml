@@ -368,13 +368,13 @@ components:
         winCondition:
           type: string
           enum:
-            - RETURN_RATE
-            - FLUCTUATION
-            - TOTAL_RETURN
+            - MAX_PROFIT_RATE
+            - MAX_FLUCTUATION
+            - MAX_PROFIT
           description: |
-            * RETURN_RATE - 수익률
-            * FLUCTUATION - 변동률
-            * TOTAL_RETURN - 총수익 (최다 수익)
+            * MAX_PROFIT_RATE - 수익률
+            * MAX_FLUCTUATION - 변동률
+            * MAX_PROFIT - 총수익 (최다 수익)
     RoomResponse:
       type: object
       properties:
@@ -435,13 +435,13 @@ components:
         ticker:
           type: string
           enum:
-            - RETURN_RATE
-            - FLUCTUATION
-            - TOTAL_RETURN
-          description: |
-            * RETURN_RATE - 수익률
-            * FLUCTUATION - 변동률
-            * TOTAL_RETURN - 총수익 (최다 수익)
+            - MAX_PROFIT_RATE
+            - MAX_FLUCTUATION
+            - MAX_PROFIT
+          description:
+            * MAX_PROFIT_RATE - 수익률
+            * MAX_FLUCTUATION - 변동률
+            * MAX_PROFIT - 총수익 (최다 수익)
     UserStockRequest:
       type: object
       properties:

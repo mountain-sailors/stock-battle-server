@@ -11,6 +11,8 @@ class UserStock extends Model {
   public ticker!: string;
 
   public amount!: number;
+
+  public initialPrice!: number;
 }
 
 UserStock.init(
@@ -34,6 +36,10 @@ UserStock.init(
     },
     amount: {
       type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    initialPrice: {
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true,
     },
   },
