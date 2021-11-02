@@ -11,9 +11,6 @@ const getGameResult = (userStocks: Array<UserStock>, winCondition: WinConditionT
   const gameResult: Array<{ userId: number; roomId: number; isWin: boolean; profit: number; rank: number }> = [];
   const profits = calculateProfits(userStocks, winCondition);
 
-  if (winCondition === WinConditionType.FLUCTUATION) profits.sort((a, b) => Math.abs(b.profit) - Math.abs(a.profit));
-  else profits.sort((a, b) => b.profit - a.profit);
-
   userStocks.forEach((userStock) => {
     const index = profits.findIndex((el) => el.id === userStock.id);
     const { profit } = profits[index];
