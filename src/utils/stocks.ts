@@ -12,3 +12,10 @@ export const updateCurrentPrices = async (data: any) => {
   stockEvents.emit('update');
   console.log(currentStockPrices);
 };
+
+export const stockArrayToObject = (stocks: Array<any>) => {
+  const stockObj: any = {};
+  // eslint-disable-next-line no-return-assign
+  stocks.forEach((stock) => (stockObj[stock.ticker] = stock.price));
+  return stockObj;
+};

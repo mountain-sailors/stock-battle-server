@@ -7,6 +7,8 @@ class Stock extends Model {
   public ticker!: string;
 
   public price!: number;
+
+  public createdAt!: Date;
 }
 
 Stock.init(
