@@ -65,16 +65,20 @@ const enterRoomByInvitation = async (invitationCode: string, userId: number) => 
   });
 };
 
-const getDashboardData = async (roomId: number) => {
-  // 같은 방에 있는 유저 id, 주식등록가격, 아바타들, stock 시간, stock 가격
-  return roomId;
+const getRoomById = async (roomId: number) => {
+  const room = await Room.findOne({
+    where: {
+      id: roomId,
+    },
+  });
+  return room;
 };
 
 const roomService = {
   createRoom,
   getMyRoomList,
   enterRoomByInvitation,
-  getDashboardData,
+  getRoomById,
 };
 
 export default roomService;

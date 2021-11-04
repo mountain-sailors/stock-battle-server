@@ -4,6 +4,7 @@ import WinConditionType from '../@types/WinConditionType';
 import Room from '../models/Room';
 import UserGameHistory from '../models/UserGameHistory';
 import UserStock from '../models/UserStock';
+import userStockService from '../services/userStockService';
 import calculateProfits from './calculator';
 
 const getGameResult = (userStocks: Array<UserStock>, winCondition: WinConditionType) => {
@@ -27,11 +28,7 @@ const getGameResult = (userStocks: Array<UserStock>, winCondition: WinConditionT
 };
 
 const createUserGameHistory = async (roomId: number, winCondition: WinConditionType) => {
-  const userStocks = await UserStock.findAll({
-    where: {
-      roomId,
-    },
-  });
+  const userStocks = await userStockService.getUserStockByRoomId(roomId);
   const gameResult = getGameResult(userStocks, winCondition);
   UserGameHistory.bulkCreate(gameResult);
 };
