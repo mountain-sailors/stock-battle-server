@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express from 'express';
 import passport from 'passport';
 import path from 'path';
@@ -12,6 +13,8 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 
 app.get('/', (req, res) => res.send('Hello Express'));
+
+app.use(cors());
 
 // swagger
 const swaggerYaml = YAML.load(path.join(__dirname, '../../swagger/swagger.yaml'));
