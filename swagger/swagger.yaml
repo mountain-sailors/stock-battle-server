@@ -438,7 +438,7 @@ components:
             - MAX_PROFIT_RATE
             - MAX_FLUCTUATION
             - MAX_PROFIT
-          description:
+          description: |
             * MAX_PROFIT_RATE - 수익률
             * MAX_FLUCTUATION - 변동률
             * MAX_PROFIT - 총수익 (최다 수익)

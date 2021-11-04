@@ -4,7 +4,6 @@ import WinConditionType from '../@types/WinConditionType';
 import Room from '../models/Room';
 import UserGameHistory from '../models/UserGameHistory';
 import UserStock from '../models/UserStock';
-import { updateCurrentPrices } from '../utils/stocks';
 import calculateProfits from './calculator';
 
 const getGameResult = (userStocks: Array<UserStock>, winCondition: WinConditionType) => {
@@ -53,7 +52,6 @@ const endRoom = async (roomList: Array<Room>) => {
 };
 
 const endGame = async () => {
-  await updateCurrentPrices();
   const currentTime = new Date();
   const targets = await Room.findAll({
     attributes: ['id'],

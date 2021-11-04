@@ -1,6 +1,6 @@
 import WinConditionType from '../@types/WinConditionType';
 import UserStock from '../models/UserStock';
-import { stockPriceMap } from '../utils/stocks';
+import { currentStockPrices } from '../utils/stocks';
 
 const calculateProfitRate = (initialPrice: number, finalPrice: number) => {
   return ((finalPrice - initialPrice) / initialPrice) * 100;
@@ -16,7 +16,7 @@ const calculateProfits = (userStocks: Array<UserStock>, winCondition: WinConditi
     winCondition === WinConditionType.MAX_PROFIT_RATE ? calculateProfitRate : calculateTotalProfit;
 
   userStocks.forEach((userStock) => {
-    const profit = calculateProfit(userStock.initialPrice, stockPriceMap.get(userStock.ticker)!, userStock.amount);
+    const profit = calculateProfit(userStock.initialPrice, currentStockPrices[userStock.ticker]!, userStock.amount);
     profits.push({ id: userStock.id, profit });
 
     if (winCondition === WinConditionType.MAX_FLUCTUATION)

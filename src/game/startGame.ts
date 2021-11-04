@@ -2,7 +2,7 @@ import { Op, Sequelize } from 'sequelize';
 import GameStatusType from '../@types/GameStatusType';
 import Room from '../models/Room';
 import UserStock from '../models/UserStock';
-import { stockPriceMap, updateCurrentPrices } from '../utils/stocks';
+import { currentStockPrices } from '../utils/stocks';
 
 const setInitialPrice = async (roomIdList: Array<number>) => {
   const userStocks = await UserStock.findAll({
@@ -10,7 +10,7 @@ const setInitialPrice = async (roomIdList: Array<number>) => {
       roomId: roomIdList,
     },
   });
-  userStocks.forEach((userStock) => userStock.update({ initialPrice: stockPriceMap.get(userStock.ticker) }));
+  userStocks.forEach((userStock) => userStock.update({ initialPrice: currentStockPrices[userStock.ticker] }));
 };
 
 const startRoom = async (roomIdList: Array<number>, cancelled: Array<number>) => {
@@ -54,7 +54,6 @@ const cancelRoom = async (roomIdList: Array<number>) => {
 };
 
 const startGame = async () => {
-  await updateCurrentPrices();
   const currentTime = new Date();
   const targets = await Room.findAll({
     attributes: ['id'],
