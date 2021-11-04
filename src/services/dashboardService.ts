@@ -3,7 +3,7 @@ import getGameData from '../game/gameData';
 import Room from '../models/Room';
 import Stock from '../models/Stock';
 import UserStock from '../models/UserStock';
-import { stockArrayToObject } from '../utils/stocks';
+import { currentStockPrices, stockArrayToObject } from '../utils/stocks';
 
 const getInitialData = async (room: Room, userStocks: Array<UserStock>) => {
   const initialData = [];
@@ -35,7 +35,8 @@ const getInitialData = async (room: Room, userStocks: Array<UserStock>) => {
 };
 
 const getCurrentData = (room: Room, userStocks: Array<UserStock>) => {
-  return [{ date: new Date(), data: { sample: 'data' } }];
+  const data = getGameData(room, userStocks, currentStockPrices);
+  return [{ date: new Date(), data }];
 };
 
 const dashboardService = {
