@@ -2,6 +2,7 @@ import axios from 'axios';
 import 'dotenv/config';
 import cron from 'node-cron';
 import stockService from '../services/stockService';
+import { stockSymbols, updateCurrentPrices } from '../utils/stocks';
 
 const apikey = process.env.STOCK_API_KEY;
 const url = `https://api.twelvedata.com/complex_data?apikey=${apikey}`;
@@ -11,13 +12,14 @@ const url = `https://api.twelvedata.com/complex_data?apikey=${apikey}`;
 const task = () =>
   cron.schedule('* 0,1,2,3,4,5,23 * * 1-5', async () => {
     const body = {
-      symbols: ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'CVS', 'TSLA', 'AXP', 'UBER'],
+      symbols: stockSymbols,
       intervals: ['1min'],
       methods: ['price'],
     };
     const { data } = await axios.post(url, body);
+    updateCurrentPrices(data);
     const res = await stockService.updateStocks(body.symbols, data as object);
-    console.log(res);
+    // console.log(res);
   });
 
 const stockScheduler = () => {

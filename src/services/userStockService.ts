@@ -25,9 +25,19 @@ const getUserStocks = async (roomId: number) => {
   return userStocks;
 };
 
+const getUserStockByRoomId = async (roomId: number) => {
+  const userStocks = await UserStock.findAll({
+    where: {
+      roomId,
+    },
+  });
+  return userStocks;
+};
+
 const userStockService = {
   registerStock,
   getUserStocks,
+  getUserStockByRoomId,
 };
 
 export default userStockService;

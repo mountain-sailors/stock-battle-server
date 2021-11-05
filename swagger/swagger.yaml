@@ -341,7 +341,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  $ref: '#/components/schemas/Dashboard'
 
 components:
   schemas:
@@ -438,7 +440,7 @@ components:
             - MAX_PROFIT_RATE
             - MAX_FLUCTUATION
             - MAX_PROFIT
-          description:
+          description: |
             * MAX_PROFIT_RATE - 수익률
             * MAX_FLUCTUATION - 변동률
             * MAX_PROFIT - 총수익 (최다 수익)
@@ -469,3 +471,20 @@ components:
           type: string
         price:
           type: integer
+    Dashboard:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        data:
+          type: array
+          items:
+            properties:
+              userId:
+                type: integer
+              profit:
+                type: number
+                format: float
+              rank:
+                type: integer

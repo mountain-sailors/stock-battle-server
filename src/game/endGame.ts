@@ -4,17 +4,18 @@ import WinConditionType from '../@types/WinConditionType';
 import Room from '../models/Room';
 import UserGameHistory from '../models/UserGameHistory';
 import UserStock from '../models/UserStock';
-import { updateCurrentPrices } from '../utils/stocks';
+import userStockService from '../services/userStockService';
+import { currentStockPrices } from '../utils/stocks';
 import calculateProfits from './calculator';
 
 const getGameResult = (userStocks: Array<UserStock>, winCondition: WinConditionType) => {
   const gameResult: Array<{ userId: number; roomId: number; isWin: boolean; profit: number; rank: number }> = [];
-  const profits = calculateProfits(userStocks, winCondition);
+  const profits = calculateProfits(userStocks, winCondition, currentStockPrices);
 
   userStocks.forEach((userStock) => {
     const index = profits.findIndex((el) => el.id === userStock.id);
     const { profit } = profits[index];
-    const rank = profits.findIndex((el) => el.profit === profit) + 1; // 대부분의 경우 index + 1 과 같음. 하지만 같은 등수일 수도 있으므로 따로 처리함 (더 좋은 방법이 있을지 생각해보자)
+    const rank = profits.findIndex((el) => el.profit === profit) + 1;
 
     gameResult.push({
       userId: userStock.userId,
@@ -28,11 +29,7 @@ const getGameResult = (userStocks: Array<UserStock>, winCondition: WinConditionT
 };
 
 const createUserGameHistory = async (roomId: number, winCondition: WinConditionType) => {
-  const userStocks = await UserStock.findAll({
-    where: {
-      roomId,
-    },
-  });
+  const userStocks = await userStockService.getUserStockByRoomId(roomId);
   const gameResult = getGameResult(userStocks, winCondition);
   UserGameHistory.bulkCreate(gameResult);
 };
@@ -53,7 +50,6 @@ const endRoom = async (roomList: Array<Room>) => {
 };
 
 const endGame = async () => {
-  await updateCurrentPrices();
   const currentTime = new Date();
   const targets = await Room.findAll({
     attributes: ['id'],
