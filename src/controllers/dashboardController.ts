@@ -23,8 +23,8 @@ const getDashboardData = async (req: Request, res: Response) => {
     const dashboardData = await dashboardService.getInitialData(room!, userStocks);
     res.write(`data: ${JSON.stringify(dashboardData)}\n\n`);
 
-    stockEvents.on('update', async () => {
-      const currentData = await dashboardService.getCurrentData(room!, userStocks);
+    stockEvents.on('update', () => {
+      const currentData = dashboardService.getCurrentData(room!, userStocks);
       res.write(`data: ${JSON.stringify(currentData)}\n\n`);
     });
 
