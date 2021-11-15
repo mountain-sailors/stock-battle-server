@@ -58,7 +58,9 @@ const getMyRoomList = async (userId: number) => {
             if (userStock.userId === userId) {
               const index = profits.findIndex((el) => el.id === userStock.id);
               const { profit } = profits[index];
+              const rank = profits.findIndex((el) => el.profit === profit) + 1;
               newRoomObj.profit = profit;
+              newRoomObj.rank = rank;
             }
           });
           return newRoomObj;
