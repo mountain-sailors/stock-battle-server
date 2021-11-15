@@ -51,18 +51,20 @@ const enterRoomByInvitation = async (invitationCode: string, userId: number) => 
       invitationCode,
     },
   });
-  if (!room) throw new Error('No such room');
-  if (room.gameStatus !== GameStatusType.NOT_STARTED) throw new Error('Cannot enter room');
+  if (!room) throw new Error('NOT_EXIST');
+  if (room.gameStatus === GameStatusType.NOT_STARTED) throw new Error('NOT_STARTED');
   const capacity = await UserStock.count({
     where: {
       roomId: room.id,
     },
   });
-  if (room.maxCapacity === capacity) throw new Error('The room is full');
-  UserStock.create({
+  if (room.maxCapacity === capacity) throw new Error('FULL_ROOM');
+
+  const createdUserStock = UserStock.create({
     userId,
     roomId: room.id,
   });
+  if (!createdUserStock) throw new Error();
 };
 
 const getRoomById = async (roomId: number) => {
