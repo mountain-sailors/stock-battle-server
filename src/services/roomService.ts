@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { QueryTypes } from 'sequelize';
 import GameStatusType from '../@types/GameStatusType';
 import WinConditionType from '../@types/WinConditionType';
