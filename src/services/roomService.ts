@@ -61,7 +61,6 @@ const getMyRoomList = async (userId: number) => {
               newRoomObj.profit = profit;
             }
           });
-          delete newRoomObj.winCondition;
           return newRoomObj;
         }
         case GameStatusType.COMPLETED: {
@@ -70,14 +69,10 @@ const getMyRoomList = async (userId: number) => {
           const myHistory: any = gameHistory.filter((e: any) => e.roomId === room.id);
           newRoomObj.profit = myHistory[0].profit;
           newRoomObj.rank = myHistory[0].rank;
-          delete newRoomObj.winCondition;
           return newRoomObj;
         }
         default:
-          // eslint-disable-next-line no-case-declarations
-          const newRoomObj: any = { ...room };
-          delete newRoomObj.winCondition;
-          return newRoomObj;
+          return room;
       }
     });
     const data = await Promise.all(promises);
