@@ -24,7 +24,7 @@ const login = async (req: Request, res: Response) => {
       // 인증이 실패했거나 유저데이터 없다면 에러
       if (passportErr || !user) {
         console.error(passportErr);
-        return res.status(StatusCode.CLIENT_ERROR).json({ success: false, message: 'Login Failed' });
+        return res.status(StatusCode.BAD_REQUEST).json({ success: false, message: 'Login Failed' });
       }
       // user 데이터를 통해 로그인 진행
       req.login(user, { session: false }, (loginErr) => {
