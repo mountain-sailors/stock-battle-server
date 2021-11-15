@@ -44,11 +44,20 @@ const searchUsers = async (value: string) => {
   return users;
 };
 
+const deleteUser = (email: string) => {
+  User.destroy({
+    where: {
+      email,
+    },
+  });
+};
+
 const userService = {
   createUser,
   findUser,
   findUsers,
   searchUsers,
+  deleteUser,
 };
 
 export default userService;

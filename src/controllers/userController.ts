@@ -77,12 +77,25 @@ const check = (req: Request, res: Response) => {
   res.json(req.decoded);
 };
 
+const deleteUser = (req: Request, res: Response) => {
+  try {
+    const { userEmail } = req.decoded;
+    userService.deleteUser(userEmail);
+
+    return res.status(StatusCode.OK).json();
+  } catch (error) {
+    // logger.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json(error);
+  }
+};
+
 const userController = {
   createAccount,
   login,
   emailValidation,
   searchUsers,
   check,
+  deleteUser,
 };
 
 export default userController;
