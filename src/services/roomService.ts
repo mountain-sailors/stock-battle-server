@@ -1,10 +1,14 @@
 import { QueryTypes } from 'sequelize';
 import GameStatusType from '../@types/GameStatusType';
 import WinConditionType from '../@types/WinConditionType';
+import calculateProfits from '../game/calculator';
 import sequelize from '../models';
 import Room from '../models/Room';
 import UserStock from '../models/UserStock';
 import generateInvitationCode from '../utils/generateInvitationCode';
+import { currentStockPrices } from '../utils/stocks';
+import userGameHistoryService from './userGameHistoryService';
+import userStockService from './userStockService';
 
 const createRoom = async (
   title: string,
@@ -38,10 +42,45 @@ const createRoom = async (
 };
 
 const getMyRoomList = async (userId: number) => {
-  const myRoomList = await sequelize.query(
-    `SELECT r.id, r.title, r.startDate, r.endDate, r.gameStatus FROM room as r INNER JOIN user_stock as u ON r.id = u.roomId WHERE u.userId=${userId}`,
+  const roomList: Array<Room> = await sequelize.query(
+    `SELECT r.id, r.winCondition, r.title, r.startDate, r.endDate, r.gameStatus FROM room as r INNER JOIN user_stock as u ON r.id = u.roomId WHERE u.userId=${userId}`,
     { type: QueryTypes.SELECT },
   );
+
+  const addRoomInfo = async () => {
+    const promises = roomList.map(async (room) => {
+      switch (room.gameStatus) {
+        case GameStatusType.IN_PROGRESS: {
+          const newRoomObj: any = { ...room };
+          const userStocks = await userStockService.getUserStockByRoomId(room.id);
+          const profits = calculateProfits(userStocks, room.winCondition, currentStockPrices);
+          userStocks.forEach((userStock) => {
+            if (userStock.userId === userId) {
+              const index = profits.findIndex((el) => el.id === userStock.id);
+              const { profit } = profits[index];
+              const rank = profits.findIndex((el) => el.profit === profit) + 1;
+              newRoomObj.profit = profit;
+              newRoomObj.rank = rank;
+            }
+          });
+          return newRoomObj;
+        }
+        case GameStatusType.COMPLETED: {
+          const newRoomObj: any = { ...room };
+          const gameHistory = await userGameHistoryService.getGameHistory(userId);
+          const myHistory: any = gameHistory.filter((e: any) => e.roomId === room.id);
+          newRoomObj.profit = myHistory[0].profit;
+          newRoomObj.rank = myHistory[0].rank;
+          return newRoomObj;
+        }
+        default:
+          return room;
+      }
+    });
+    const data = await Promise.all(promises);
+    return data;
+  };
+  const myRoomList = addRoomInfo();
   return myRoomList;
 };
 
