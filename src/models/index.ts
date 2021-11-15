@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { Sequelize } from 'sequelize';
 import { dotEnvType } from '../@types/dataType';
-import logger from '../config/logger';
+import { logger } from '../config/logger';
 
 declare let process: {
   env: dotEnvType;

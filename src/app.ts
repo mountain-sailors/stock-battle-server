@@ -1,7 +1,9 @@
 import cors from 'cors';
 import express from 'express';
+import morgan from 'morgan';
 import passport from 'passport';
 import passportConfig from './auth/passport';
+import { myStream } from './config/logger';
 import router from './routes';
 
 const app = express();
@@ -19,6 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 // passport
 app.use(passport.initialize());
 passportConfig();
+
+// morgan
+app.use(morgan('combined', { stream: myStream }));
 
 app.use('/api', router);
 

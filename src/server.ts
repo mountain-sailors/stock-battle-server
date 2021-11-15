@@ -2,7 +2,7 @@ import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import app from './app';
-import logger from './config/logger';
+import { logger } from './config/logger';
 import sequelize from './models';
 
 // db connection
