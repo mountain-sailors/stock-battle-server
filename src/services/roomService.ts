@@ -69,8 +69,10 @@ const getMyRoomList = async (userId: number) => {
           const newRoomObj: any = { ...room };
           const gameHistory = await userGameHistoryService.getGameHistory(userId);
           const myHistory: any = gameHistory.filter((e: any) => e.roomId === room.id);
-          newRoomObj.profit = myHistory[0].profit;
-          newRoomObj.rank = myHistory[0].rank;
+          if (myHistory.length > 0) {
+            newRoomObj.profit = myHistory[0].profit;
+            newRoomObj.rank = myHistory[0].rank;
+          }
           return newRoomObj;
         }
         default:
@@ -90,13 +92,19 @@ const enterRoomByInvitation = async (invitationCode: string, userId: number) => 
       invitationCode,
     },
   });
-  if (!room) throw new Error('NOT_EXIST');
+  if (!room || room.gameStatus === GameStatusType.CANCELLED) throw new Error('NOT_EXIST');
   if (room.gameStatus === GameStatusType.NOT_STARTED) throw new Error('NOT_STARTED');
-  const capacity = await UserStock.count({
+
+  const roomMembers = await UserStock.findAll({
     where: {
       roomId: room.id,
     },
+    raw: true,
   });
+  roomMembers.forEach((member) => {
+    if (member.userId === userId) throw new Error('ALREADY_ENTERED');
+  });
+  const capacity = roomMembers.length;
   if (room.maxCapacity === capacity) throw new Error('FULL_ROOM');
 
   const createdUserStock = UserStock.create({
