@@ -13,17 +13,17 @@ describe('Test the root path', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  test('POST method: Creating Room Success', async () => {
-    const body = {
-      title: 'unitTestRoom',
-      maxCapacity: 4,
-      startDate: new Date(),
-      endDate: new Date().setDate(new Date().getDate() + 7),
-      winCondition: 'MAX_FLUCTUATION',
-    };
-    const response = await request(App).post('/api/room').set('Authorization', token).send(body);
-    expect(response.statusCode).toBe(200);
-  });
+  // test('POST method: Creating Room Success', async () => {
+  //   const body = {
+  //     title: 'unitTestRoom',
+  //     maxCapacity: 4,
+  //     startDate: new Date(),
+  //     endDate: new Date().setDate(new Date().getDate() + 7),
+  //     winCondition: 'MAX_FLUCTUATION',
+  //   };
+  //   const response = await request(App).post('/api/room').set('Authorization', token).send(body);
+  //   expect(response.statusCode).toBe(200);
+  // });
 
   test('POST method: Creating Room Bad Request', async () => {
     const body = {
@@ -33,13 +33,13 @@ describe('Test the root path', () => {
     expect(response.statusCode).toBe(400);
   });
 
-  test('POST method: Enter room by invitation', async () => {
-    const body = {
-      invitationCode: 'dwq',
-    };
-    const response = await request(App).post('/api/room/invitation').set('Authorization', token).send(body);
-    expect(response.statusCode).toBe(200);
-  });
+  // test('POST method: Enter room by invitation', async () => {
+  //   const body = {
+  //     invitationCode: 'dwq',
+  //   };
+  //   const response = await request(App).post('/api/room/invitation').set('Authorization', token).send(body);
+  //   expect(response.statusCode).toBe(200);
+  // });
 
   test('POST method: Cannot enter room', async () => {
     const body = {

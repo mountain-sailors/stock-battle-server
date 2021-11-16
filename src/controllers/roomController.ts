@@ -54,8 +54,8 @@ const enterRoomByInvitation = async (req: Request, res: Response) => {
         return res.status(StatusCode.NOT_FOUND).json('ROOM DOES NOT EXIST');
       case 'FULL_ROOM':
         return res.status(StatusCode.FORBIDDEN).json('ROOM IS FULL');
-      case 'NOT_STARTED':
-        return res.status(StatusCode.GONE).json('GAME IS NOT STARTED');
+      case 'CANNOT_ENTER':
+        return res.status(StatusCode.GONE).json('CANNOT ENTER THE ROOM');
       default:
         return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
     }

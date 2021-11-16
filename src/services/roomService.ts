@@ -92,8 +92,8 @@ const enterRoomByInvitation = async (invitationCode: string, userId: number) => 
       invitationCode,
     },
   });
-  if (!room || room.gameStatus === GameStatusType.CANCELLED) throw new Error('NOT_EXIST');
-  if (room.gameStatus === GameStatusType.NOT_STARTED) throw new Error('NOT_STARTED');
+  if (!room) throw new Error('NOT_EXIST');
+  if (room.gameStatus !== GameStatusType.NOT_STARTED) throw new Error('CANNOT_ENTER');
 
   const roomMembers = await UserStock.findAll({
     where: {
