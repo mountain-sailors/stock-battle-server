@@ -33,4 +33,10 @@ const logger = winston.createLogger({
   transports,
 });
 
-export default logger;
+const myStream = {
+  write: (text: string) => {
+    logger.info(text);
+  },
+};
+
+export { myStream, logger };

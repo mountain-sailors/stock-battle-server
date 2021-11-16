@@ -23,7 +23,7 @@ const verifyToken = (req: Request, res: Response, next: NextFunction) => {
     if (error instanceof jwt.TokenExpiredError) {
       return res.status(statusCode.TOKEN_EXPIRED).json({ message: 'Token Expired' });
     }
-    return res.status(statusCode.CLIENT_ERROR).json({ message: 'Invalid Token' });
+    return res.status(statusCode.UNAUTHORIZED).json({ message: 'Invalid Token' });
   }
 };
 
