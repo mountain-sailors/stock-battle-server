@@ -101,6 +101,18 @@ describe('Test "GET /api/user/search"', () => {
   });
 });
 
+describe('Test "GET /api/me"', () => {
+  test('Normal case', async () => {
+    const response = await request(App).get('/api/me').set({ Authorization: token });
+    expect(response.statusCode).toBe(200);
+    console.log(response.body);
+  });
+  test('Without token', async () => {
+    const response = await request(App).get('/api/me');
+    expect(response.statusCode).toBe(401);
+  });
+});
+
 describe('Test "DELETE /api/user"', () => {
   test('Normal case', async () => {
     const response = await request(App).delete('/api/user').set({ Authorization: token });
