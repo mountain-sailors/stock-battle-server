@@ -1,8 +1,8 @@
 import { Op } from 'sequelize';
 import User from '../models/User';
 
-const createUser = (username: string, email: string, password: string, avatar: string) => {
-  User.create({
+const createUser = async (username: string, email: string, password: string, avatar: string) => {
+  await User.create({
     username,
     email,
     password,
