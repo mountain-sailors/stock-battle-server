@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import 'dotenv/config';
 import { JwtPayload } from 'jsonwebtoken';
 import passport from 'passport';
@@ -22,7 +23,8 @@ const localVerify = async (email: string, password: string, done: Function) => {
       return;
     }
     // 비밀번호 다를 경우
-    if (password !== user.password) {
+    const compareResult = await bcrypt.compare(password, user.password);
+    if (!compareResult) {
       done(null, false, { reason: 'Invalid Password' });
       return;
     }

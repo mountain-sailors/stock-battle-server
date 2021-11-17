@@ -9,5 +9,6 @@ router.post('/login', userController.login);
 router.post('/validation', userController.emailValidation);
 router.get('/search', verifyToken, userController.searchUsers);
 router.get('/check', verifyToken, userController.check);
+router.delete('/', verifyToken, userController.deleteAccount);
 
 export default router;

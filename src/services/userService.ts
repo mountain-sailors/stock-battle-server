@@ -1,8 +1,8 @@
 import { Op } from 'sequelize';
 import User from '../models/User';
 
-const createUser = (username: string, email: string, password: string, avatar: string) => {
-  User.create({
+const createUser = async (username: string, email: string, password: string, avatar: string) => {
+  await User.create({
     username,
     email,
     password,
@@ -44,11 +44,20 @@ const searchUsers = async (value: string) => {
   return users;
 };
 
+const deleteUser = (email: string) => {
+  User.destroy({
+    where: {
+      email,
+    },
+  });
+};
+
 const userService = {
   createUser,
   findUser,
   findUsers,
   searchUsers,
+  deleteUser,
 };
 
 export default userService;

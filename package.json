@@ -18,8 +18,10 @@
   },
   "homepage": "https://github.com/mountain-sailors/stock-battle-server#readme",
   "dependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/morgan": "^1.9.3",
     "axios": "^0.23.0",
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
