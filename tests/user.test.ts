@@ -2,7 +2,7 @@ import request from 'supertest';
 import App from '../src/app';
 
 const token =
-  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEyLCJ1c2VybmFtZSI6InRlc3RfdXNlciIsInVzZXJFbWFpbCI6InRlc3RfdXNlckBlbWFpbC5jb20iLCJpYXQiOjE2MzY5NjY5NzQsImV4cCI6MTYzNzU3MTc3NH0.221-iQjwXD-GzNUepM2sJFC5AB2bf00pM095uOuAGkY';
+  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJ1c2VybmFtZSI6InRlc3RfdXNlciIsInVzZXJFbWFpbCI6InRlc3RfdXNlckBlbWFpbC5jb20iLCJpYXQiOjE2MzcxMTgzNTksImV4cCI6MTYzNzcyMzE1OX0.hbCAgVf47KG-M56-LcjVNk-_ewUMm2gDKelStTnfzEk';
 
 describe('Test "POST /api/user/validation"', () => {
   test("Email  doesn't exist", async () => {
@@ -15,7 +15,7 @@ describe('Test "POST /api/user/validation"', () => {
   });
   test('Email exists', async () => {
     const body = {
-      email: 'admin@email.com',
+      email: 'admin@admin.com',
     };
     const response = await request(App).post('/api/user/validation').send(body);
     expect(response.statusCode).toBe(200);
