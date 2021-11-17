@@ -1,3 +1,4 @@
+import bcrypt from 'bcrypt';
 import { DataTypes, Model } from 'sequelize';
 import sequelize from './index';
 
@@ -51,7 +52,18 @@ User.init(
     tableName: 'user',
     createdAt: true,
     updatedAt: false,
+    hooks: {
+      beforeCreate: (user, option) => {
+        // eslint-disable-next-line no-param-reassign
+        user.password =
+          user.password && user.password !== '' ? bcrypt.hashSync(user.password, bcrypt.genSaltSync(10)) : '';
+      },
+    },
   },
 );
+
+// User.addHook('beforeCreate', (user, option) => {
+//   user.password = user.password && user.password != '' ? bcrypt.hashSync(user.password, 10) : '';
+// });
 
 export default User;
