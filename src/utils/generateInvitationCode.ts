@@ -5,14 +5,16 @@ const generateRandomCode = () => {
   return Buffer.from(v4(), 'utf8').toString('base64');
 };
 
-const generateInvitationCode = async () => {
+const generateInvitationCode = async (): Promise<any> => {
   const code: string = generateRandomCode();
   const room = await Room.findOne({
     where: {
       invitationCode: code,
     },
   });
-  if (room) generateInvitationCode();
+  if (room) {
+    return generateInvitationCode();
+  }
   return code;
 };
 
