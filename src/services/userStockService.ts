@@ -3,18 +3,13 @@ import sequelize from '../models';
 import UserStock from '../models/UserStock';
 
 const registerStock = async (roomId: number, ticker: string, amount: number, userId: number) => {
-  await UserStock.update(
-    {
-      ticker,
-      amount,
-    },
-    {
-      where: {
-        userId,
-        roomId,
-      },
-    },
-  );
+  const userStock = await UserStock.findOne({ where: { userId, roomId } });
+  if (!userStock) throw Error('No Such Room');
+
+  userStock.ticker = ticker;
+  userStock.amount = amount;
+  const result = await userStock.save();
+  return result;
 };
 
 const getUserStocks = async (roomId: number) => {
