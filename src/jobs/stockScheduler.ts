@@ -10,16 +10,23 @@ const url = `https://api.twelvedata.com/complex_data?apikey=${apikey}`;
 // symbols - user-stock에서 조회해올 것
 // minute, hour, day of month, month, day of week
 const task = () =>
-  cron.schedule('*/5 0,1,2,3,4,5,23 * * 1-5', async () => {
-    const body = {
-      symbols: stockSymbols,
-      intervals: ['1min'],
-      methods: ['price'],
-    };
-    const { data } = await axios.post(url, body);
-    updateCurrentPrices(data);
-    stockService.updateStocks(body.symbols, data as object);
-  });
+  cron.schedule(
+    '*/5 14,15,16,17,18,19,20 * * 1-5',
+    async () => {
+      const body = {
+        symbols: stockSymbols,
+        intervals: ['1min'],
+        methods: ['price'],
+      };
+      const { data } = await axios.post(url, body);
+      updateCurrentPrices(data);
+      stockService.updateStocks(body.symbols, data as object);
+    },
+    {
+      scheduled: true,
+      timezone: 'UTC',
+    },
+  );
 
 const stockScheduler = () => {
   task().start();
