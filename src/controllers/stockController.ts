@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import StatusCode from '../@types/statusCode';
+import { logger } from '../config/logger';
 import stockService from '../services/stockService';
 
 const getStocks = async (req: Request, res: Response) => {
@@ -8,7 +9,7 @@ const getStocks = async (req: Request, res: Response) => {
 
     return res.status(StatusCode.OK).json(stocks);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }
 };
@@ -20,7 +21,7 @@ const searchStocks = async (req: Request, res: Response) => {
 
     return res.status(StatusCode.OK).json(stocks);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }
 };

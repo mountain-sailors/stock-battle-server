@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import passport from 'passport';
 import passportConfig from './auth/passport';
 import { myStream } from './config/logger';
+import initScheduler from './jobs';
 import router from './routes';
 
 const app = express();
@@ -28,6 +29,6 @@ app.use(morgan('combined', { stream: myStream }));
 app.use('/api', router);
 
 // scheduler
-// initScheduler();
+initScheduler();
 
 export default app;
