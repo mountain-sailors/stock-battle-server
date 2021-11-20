@@ -25,6 +25,7 @@ const getUserStockByRoomId = async (roomId: number) => {
     where: {
       roomId,
     },
+    raw: true,
   });
   return userStocks;
 };

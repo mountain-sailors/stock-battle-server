@@ -9,9 +9,10 @@ const url = `https://api.twelvedata.com/complex_data?apikey=${apikey}`;
 
 // symbols - user-stock에서 조회해올 것
 // minute, hour, day of month, month, day of week
+// '*/5 14,15,16,17,18,19,20 * * 1-5'
 const task = () =>
   cron.schedule(
-    '*/5 14,15,16,17,18,19,20 * * 1-5',
+    '* * * * *',
     async () => {
       const body = {
         symbols: stockSymbols,

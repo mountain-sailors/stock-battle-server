@@ -21,11 +21,12 @@ const findUser = async (column: string, value: string, attributes: string[]) => 
   return user;
 };
 
-const findUsers = async (column: string, value: string) => {
+const findUsers = async (column: string, value: number[]) => {
   const users = await User.findAll({
     where: {
       [column]: value,
     },
+    raw: true,
   });
   return users;
 };
