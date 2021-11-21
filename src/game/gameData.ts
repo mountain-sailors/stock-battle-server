@@ -8,9 +8,9 @@ const getGameData = (room: Room, userStocks: Array<UserStock>, stockPrices: any)
 
   userStocks.forEach((userStock) => {
     const index = profits.findIndex((el) => el.id === userStock.id);
-    const { profit } = profits[index];
+    let { profit } = profits[index];
     const rank = profits.findIndex((el) => el.profit === profit) + 1;
-
+    profit = Math.round(profit * 100) / 100;
     data.push({
       userId: userStock.userId,
       profit,
