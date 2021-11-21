@@ -70,7 +70,7 @@ const getMyRoomList = async (userId: number) => {
           const gameHistory = await userGameHistoryService.getGameHistory(userId);
           const myHistory: any = gameHistory.filter((e: any) => e.roomId === room.id);
           if (myHistory.length > 0) {
-            newRoomObj.profit = myHistory[0].profit;
+            newRoomObj.profit = +myHistory[0].profit;
             newRoomObj.rank = myHistory[0].rank;
           }
           return newRoomObj;
