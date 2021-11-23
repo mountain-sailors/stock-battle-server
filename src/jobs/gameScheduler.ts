@@ -10,8 +10,8 @@ const task = (time: string, func: () => void) =>
 
 const gameScheduler = () => {
   try {
-    task('30 14 * * 1-5', startGame).start();
-    task('0 21 * * 1-5', endGame).start();
+    task('*/10 * * * *', startGame).start();
+    task('*/10 * * * *', endGame).start();
   } catch (e) {
     console.log(e);
   }
