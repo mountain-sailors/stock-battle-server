@@ -23,8 +23,22 @@ const getGameHistory = async (userId: number) => {
   return gameHistory;
 };
 
+const getGameResult = async (roomId: number) => {
+  const gameResult = await sequelize.query(
+    `SELECT ugh.userId, ugh.isWin, ugh.rank, ugh.profit,
+    us.ticker, us.amount from user_game_history as ugh
+    INNER JOIN user_stock as us
+    ON ugh.roomId=us.roomId and ugh.userId=us.userId
+    WHERE ugh.roomId = ${roomId};`,
+    { type: QueryTypes.SELECT },
+  );
+
+  return gameResult;
+};
+
 const userGameHistoryService = {
   getGameHistory,
+  getGameResult,
 };
 
 export default userGameHistoryService;
