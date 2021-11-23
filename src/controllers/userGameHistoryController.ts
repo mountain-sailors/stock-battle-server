@@ -16,8 +16,22 @@ const findGameHistory = async (req: Request, res: Response) => {
   }
 };
 
+const getGameResult = async (req: Request, res: Response) => {
+  try {
+    const { roomId } = req.params;
+
+    const gameResult = await userGameHistoryService.getGameResult(+roomId);
+
+    return res.status(StatusCode.OK).json(gameResult);
+  } catch (error) {
+    console.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
+  }
+};
+
 const userGameHistoryController = {
   findGameHistory,
+  getGameResult,
 };
 
 export default userGameHistoryController;
