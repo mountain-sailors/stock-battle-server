@@ -1,6 +1,6 @@
 # stock-battle-server
 
-> A repository for orbits back-end
+> A repository for zumazuma back-end
 
 ### How to run
 ```
