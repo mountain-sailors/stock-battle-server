@@ -1,7 +1,26 @@
 import EventEmitter from 'events';
 
 export const currentStockPrices: any = {};
-export const stockSymbols = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'CVS', 'TSLA', 'AXP', 'UBER', 'BTC/USD', 'ETH/USD'];
+export const stockSymbols = [
+  'AAPL',
+  'MSFT',
+  'GOOGL',
+  'AMZN',
+  'CVS',
+  'TSLA',
+  'AXP',
+  'UBER',
+  'BTC/USD',
+  'ETH/USD',
+  'SOL/USD',
+  'ADA/USD',
+  'BNB/USD',
+  '005930', // samsung
+  '000660', // sk hynix
+  '035420', // naver
+  '207940', // samsung biologics
+  '051910', // lg chemical
+];
 export const stockEvents = new EventEmitter();
 
 export const updateCurrentPrices = async (data: any) => {
