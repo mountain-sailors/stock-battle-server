@@ -12,10 +12,14 @@ const getInitialData = async (room: Room, userStocks: Array<UserStock>) => {
       createdAt: { [Op.gte]: room.startDate },
     },
   });
-
   const currentTime = new Date().getTime();
-  let date = new Date(room.startDate).getTime();
+
+  let date = currentTime - 1000 * 60 * 100;
+  if (date < new Date(room.startDate).getTime()) {
+    date = new Date(room.startDate).getTime();
+  }
   let next = date + 1000 * 60;
+
   while (date <= currentTime) {
     // eslint-disable-next-line no-loop-func
     const tmp = stocks.filter((stock) => next > stock.createdAt.getTime() && date <= stock.createdAt.getTime());
@@ -31,6 +35,7 @@ const getInitialData = async (room: Room, userStocks: Array<UserStock>) => {
     date = next;
     next += 1000 * 60;
   }
+
   return initialData;
 };
 
