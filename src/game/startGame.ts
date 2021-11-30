@@ -1,5 +1,6 @@
-import { Op, Sequelize } from 'sequelize';
+import { Op, QueryTypes, Sequelize } from 'sequelize';
 import GameStatusType from '../@types/GameStatusType';
+import sequelize from '../models';
 import Room from '../models/Room';
 import UserStock from '../models/UserStock';
 import { currentStockPrices } from '../utils/stocks';
@@ -38,19 +39,41 @@ const cancelRoom = async (roomIdList: Array<number>) => {
       ticker: null,
     },
   });
+  const cancelled2 = await sequelize.query(
+    `SELECT us.roomId, COUNT(us.userId), r.maxCapacity
+  FROM stock_battle.user_stock AS us
+  JOIN stock_battle.room AS r
+  ON r.id = us.roomId
+  WHERE r.id in (:roomIdList)
+  GROUP BY us.roomId
+  HAVING COUNT(us.userId) != r.maxCapacity;`,
+    {
+      type: QueryTypes.SELECT,
+      replacements: {
+        roomIdList,
+      },
+    },
+  );
+
   const cancelledRoomIdList = cancelled.map((c) => c.roomId);
-  if (cancelledRoomIdList.length === 0) return cancelledRoomIdList;
+  const cancelledRoomIdList2 = cancelled2.map((c: any) => c.roomId);
+
+  const cancel = cancelledRoomIdList.concat(
+    cancelledRoomIdList2.filter((el: number) => !cancelledRoomIdList.find((c) => c === el)),
+  );
+
+  if (cancel.length === 0) return cancel;
   await Room.update(
     {
       gameStatus: GameStatusType.CANCELLED,
     },
     {
       where: {
-        id: cancelledRoomIdList,
+        id: cancel,
       },
     },
   );
-  return cancelledRoomIdList;
+  return cancel;
 };
 
 const startGame = async () => {
