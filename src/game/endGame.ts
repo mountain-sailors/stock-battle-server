@@ -6,7 +6,7 @@ import UserGameHistory from '../models/UserGameHistory';
 import UserStock from '../models/UserStock';
 import userStockService from '../services/userStockService';
 import { currentStockPrices } from '../utils/stocks';
-import calculateProfits from './calculator';
+import { calculateProfits } from './calculator';
 
 const getGameResult = (userStocks: Array<UserStock>, winCondition: WinConditionType) => {
   const gameResult: Array<{ userId: number; roomId: number; isWin: boolean; profit: number; rank: number }> = [];

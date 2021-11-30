@@ -1,6 +1,6 @@
 import Room from '../models/Room';
 import UserStock from '../models/UserStock';
-import calculateProfits from './calculator';
+import { calculateProfits } from './calculator';
 
 const getGameData = (room: Room, userStocks: Array<UserStock>, stockPrices: any) => {
   const data: Array<{ userId: number; profit: number; rank: number }> = [];

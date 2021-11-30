@@ -1,7 +1,7 @@
 import { QueryTypes } from 'sequelize';
 import GameStatusType from '../@types/GameStatusType';
 import WinConditionType from '../@types/WinConditionType';
-import calculateProfits from '../game/calculator';
+import { calculateProfits } from '../game/calculator';
 import sequelize from '../models';
 import Room from '../models/Room';
 import UserStock from '../models/UserStock';
