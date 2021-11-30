@@ -26,4 +26,4 @@ const calculateProfits = (userStocks: Array<UserStock>, winCondition: WinConditi
   return profits;
 };
 
-export default calculateProfits;
+export { calculateProfits, calculateProfitRate, calculateTotalProfit };
