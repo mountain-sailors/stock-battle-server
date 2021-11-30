@@ -52,7 +52,6 @@ const endRoom = async (roomList: Array<Room>) => {
 const endGame = async () => {
   const currentTime = new Date();
   const targets = await Room.findAll({
-    attributes: ['id'],
     where: {
       gameStatus: GameStatusType.IN_PROGRESS,
       endDate: { [Op.lte]: currentTime },
