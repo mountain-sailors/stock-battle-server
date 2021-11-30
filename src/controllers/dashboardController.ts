@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { logger } from '../config/logger';
 import dashboardService from '../services/dashboardService';
 import { stockEvents } from '../utils/stocks';
 
@@ -18,17 +19,19 @@ const getDashboardData = async (req: Request, res: Response) => {
     // send initial data (all data from start date to now)
     const dashboardData = await dashboardService.getInitialData(+roomId);
     res.write(`data: ${JSON.stringify(dashboardData)}\n\n`);
+    logger.info(`SSE initial data sent to room ${roomId}`);
 
-    stockEvents.on('update', () => {
-      const currentData = dashboardService.getCurrentData(+roomId);
+    stockEvents.on('update', async () => {
+      const currentData = await dashboardService.getCurrentData(+roomId);
       res.write(`data: ${JSON.stringify(currentData)}\n\n`);
+      logger.info(`SSE current data sent to room ${roomId}`);
     });
 
     req.on('close', () => {
-      console.log('sse connection closed');
+      logger.info('SSE connection closed');
     });
   } catch (err) {
-    console.log(`sse error: ${err}`);
+    logger.error(`SSE error: ${err}`);
   }
 };
 
