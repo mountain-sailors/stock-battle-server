@@ -45,8 +45,8 @@ const getBoardData = (stock: any) => {
   const calculateProfit =
     stock.winCondition === WinConditionType.MAX_PROFIT_RATE ? calculateProfitRate : calculateTotalProfit;
 
-  const profit = calculateProfit(stock.initialPrice, stock.price, stock.amount);
-
+  let profit = calculateProfit(stock.initialPrice, stock.price, stock.amount);
+  profit = Math.round(profit * 1000) / 1000;
   const data = {
     userId: stock.userId,
     profit,
