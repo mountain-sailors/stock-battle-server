@@ -35,7 +35,7 @@ UserStock.init(
       allowNull: true,
     },
     amount: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     initialPrice: {
