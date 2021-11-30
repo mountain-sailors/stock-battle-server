@@ -60,7 +60,7 @@ const getInitialData = async (roomId: number) => {
   const capacity = stocks[0].maxCapacity;
   let idx = 1;
   let data: any = [];
-  console.time('init');
+
   stocks.forEach((stock: any) => {
     data.push(getBoardData(stock));
 
@@ -74,34 +74,19 @@ const getInitialData = async (roomId: number) => {
     }
     idx += 1;
   });
-  console.timeEnd('init');
-  return initialData;
 
-  // const stocks = await Stock.findAll({
-  //   where: {
-  //     createdAt: { [Op.gte]: room.startDate },
-  //   },
-  // });
-  // const currentTime = new Date().getTime();
-  // let date = currentTime - 1000 * 60 * 100;
-  // if (date < new Date(room.startDate).getTime()) {
-  //   date = new Date(room.startDate).getTime();
-  // }
-  // let next = date + 1000 * 60;
-  // while (date <= currentTime) {
-  //   // eslint-disable-next-line no-loop-func
-  //   const tmp = stocks.filter((stock) => next > stock.createdAt.getTime() && date <= stock.createdAt.getTime());
-  //   if (tmp.length !== 0) {
-  //     const data = getGameData(room, userStocks, stockArrayToObject(tmp));
-  //     initialData.push({
-  //       date: new Date(date),
-  //       data,
-  //     });
-  //   }
-  //   date = next;
-  //   next += 1000 * 60;
-  // }
-  // return initialData;
+  initialData.forEach((el) => {
+    let r = 1;
+    if (stocks[0].winCondition === WinConditionType.MAX_FLUCTUATION)
+      el.data.sort((a: any, b: any) => Math.abs(b.profit) - Math.abs(a.profit));
+    else el.data.sort((a: any, b: any) => b.profit - a.profit);
+    el.data.forEach((d: any) => {
+      // eslint-disable-next-line no-param-reassign
+      d.rank = r;
+      r += 1;
+    });
+  });
+  return initialData;
 };
 
 const getCurrentData = async (roomId: number) => {
