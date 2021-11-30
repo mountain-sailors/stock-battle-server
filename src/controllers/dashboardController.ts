@@ -1,14 +1,10 @@
 import { Request, Response } from 'express';
 import dashboardService from '../services/dashboardService';
-import roomService from '../services/roomService';
-import userStockService from '../services/userStockService';
 import { stockEvents } from '../utils/stocks';
 
 const getDashboardData = async (req: Request, res: Response) => {
   try {
     const { roomId } = req.params;
-    const room = await roomService.getRoomById(+roomId);
-    const userStocks = await userStockService.getUserStockByRoomId(+roomId);
 
     res.writeHead(200, {
       'Cache-Control': 'no-cache',
@@ -20,11 +16,11 @@ const getDashboardData = async (req: Request, res: Response) => {
     res.write('retry: 100000\n\n');
 
     // send initial data (all data from start date to now)
-    const dashboardData = await dashboardService.getInitialData(room!, userStocks);
+    const dashboardData = await dashboardService.getInitialData(+roomId);
     res.write(`data: ${JSON.stringify(dashboardData)}\n\n`);
 
     stockEvents.on('update', () => {
-      const currentData = dashboardService.getCurrentData(room!, userStocks);
+      const currentData = dashboardService.getCurrentData(+roomId);
       res.write(`data: ${JSON.stringify(currentData)}\n\n`);
     });
 

@@ -1,18 +1,19 @@
-import { Op, QueryTypes } from 'sequelize';
+import { QueryTypes } from 'sequelize';
+import WinConditionType from '../@types/WinConditionType';
+import { calculateProfitRate, calculateTotalProfit } from '../game/calculator';
 import getGameData from '../game/gameData';
 import sequelize from '../models';
-import Room from '../models/Room';
-import Stock from '../models/Stock';
-import UserStock from '../models/UserStock';
-import { currentStockPrices, stockArrayToObject } from '../utils/stocks';
+import { currentStockPrices } from '../utils/stocks';
+import roomService from './roomService';
+import userStockService from './userStockService';
 
 const dateFormatter = (date: Date) => {
-  const year = date.getFullYear();
-  const month = `0${date.getMonth() + 1}`.slice(-2);
-  const day = `0${date.getDate()}`.slice(-2);
-  const hours = `0${date.getHours()}`.slice(-2);
-  const minutes = `0${date.getMinutes()}`.slice(-2);
-  const seconds = `0${date.getSeconds()}`.slice(-2);
+  const year = date.getUTCFullYear();
+  const month = `0${date.getUTCMonth() + 1}`.slice(-2);
+  const day = `0${date.getUTCDate()}`.slice(-2);
+  const hours = `0${date.getUTCHours()}`.slice(-2);
+  const minutes = `0${date.getUTCMinutes()}`.slice(-2);
+  const seconds = `0${date.getUTCSeconds()}`.slice(-2);
 
   const dateString = `"${year}-${month}-${day} ${hours}:${minutes}:${seconds}"`;
 
@@ -40,42 +41,73 @@ const getData = async (roomId: number) => {
   return data;
 };
 
-const getInitialData = async (room: Room, userStocks: Array<UserStock>) => {
-  const initialData = [];
-  const stocks = await Stock.findAll({
-    where: {
-      createdAt: { [Op.gte]: room.startDate },
-    },
-  });
-  const currentTime = new Date().getTime();
+const getBoardData = (stock: any) => {
+  const calculateProfit =
+    stock.winCondition === WinConditionType.MAX_PROFIT_RATE ? calculateProfitRate : calculateTotalProfit;
 
-  let date = currentTime - 1000 * 60 * 100;
-  if (date < new Date(room.startDate).getTime()) {
-    date = new Date(room.startDate).getTime();
-  }
-  let next = date + 1000 * 60;
+  const profit = calculateProfit(stock.initialPrice, stock.price, stock.amount);
 
-  while (date <= currentTime) {
-    // eslint-disable-next-line no-loop-func
-    const tmp = stocks.filter((stock) => next > stock.createdAt.getTime() && date <= stock.createdAt.getTime());
-
-    if (tmp.length !== 0) {
-      const data = getGameData(room, userStocks, stockArrayToObject(tmp));
-
-      initialData.push({
-        date: new Date(date),
-        data,
-      });
-    }
-    date = next;
-    next += 1000 * 60;
-  }
-
-  return initialData;
+  const data = {
+    userId: stock.userId,
+    profit,
+  };
+  return data;
 };
 
-const getCurrentData = (room: Room, userStocks: Array<UserStock>) => {
-  const data = getGameData(room, userStocks, currentStockPrices);
+const getInitialData = async (roomId: number) => {
+  const initialData: Array<any> = [];
+  const stocks: any = await getData(roomId);
+  const capacity = stocks[0].maxCapacity;
+  let idx = 1;
+  let data: any = [];
+  console.time('init');
+  stocks.forEach((stock: any) => {
+    data.push(getBoardData(stock));
+
+    if (idx === capacity) {
+      initialData.push({
+        date: new Date(stock.createdAt),
+        data,
+      });
+      data = [];
+      idx = 0;
+    }
+    idx += 1;
+  });
+  console.timeEnd('init');
+  return initialData;
+
+  // const stocks = await Stock.findAll({
+  //   where: {
+  //     createdAt: { [Op.gte]: room.startDate },
+  //   },
+  // });
+  // const currentTime = new Date().getTime();
+  // let date = currentTime - 1000 * 60 * 100;
+  // if (date < new Date(room.startDate).getTime()) {
+  //   date = new Date(room.startDate).getTime();
+  // }
+  // let next = date + 1000 * 60;
+  // while (date <= currentTime) {
+  //   // eslint-disable-next-line no-loop-func
+  //   const tmp = stocks.filter((stock) => next > stock.createdAt.getTime() && date <= stock.createdAt.getTime());
+  //   if (tmp.length !== 0) {
+  //     const data = getGameData(room, userStocks, stockArrayToObject(tmp));
+  //     initialData.push({
+  //       date: new Date(date),
+  //       data,
+  //     });
+  //   }
+  //   date = next;
+  //   next += 1000 * 60;
+  // }
+  // return initialData;
+};
+
+const getCurrentData = async (roomId: number) => {
+  const room = await roomService.getRoomById(+roomId);
+  const userStocks = await userStockService.getUserStockByRoomId(+roomId);
+  const data = getGameData(room!, userStocks, currentStockPrices);
   return [{ date: new Date(), data }];
 };
 
