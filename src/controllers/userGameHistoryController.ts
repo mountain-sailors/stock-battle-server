@@ -8,9 +8,10 @@ const findGameHistory = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
     const gameHistory = await userGameHistoryService.getGameHistory(+userId);
-
+    console.log(gameHistory);
     return res.status(StatusCode.OK).json(gameHistory);
-  } catch (error) {
+  } catch (error: any) {
+    if (error.message === 'NO_RESULT') return res.status(StatusCode.OK).json([]);
     logger.error(error);
     return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }

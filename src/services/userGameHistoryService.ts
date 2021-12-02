@@ -28,6 +28,7 @@ const getGameHistory = async (userId: number) => {
       roomIdToString += `${history.roomId},`;
     }
   });
+  if (roomIdToString.length === 0) throw new Error('NO_RESULT');
   const users = await sequelize.query(
     `SELECT ugh.userId, ugh.roomId, u.username
     FROM stock_battle.user_game_history AS ugh
