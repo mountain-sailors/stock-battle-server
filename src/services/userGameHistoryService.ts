@@ -19,7 +19,32 @@ const findGameHistory = async (userId: number) => {
 
 const getGameHistory = async (userId: number) => {
   const gameHistory = await findGameHistory(userId);
-
+  let roomIdToString = '';
+  const historyLength = gameHistory.length;
+  gameHistory.forEach((history: any, i) => {
+    if (i === historyLength - 1) {
+      roomIdToString += `${history.roomId}`;
+    } else {
+      roomIdToString += `${history.roomId},`;
+    }
+  });
+  const users = await sequelize.query(
+    `SELECT ugh.userId, ugh.roomId, u.username
+    FROM stock_battle.user_game_history AS ugh
+    JOIN stock_battle.user AS u
+    ON u.id=ugh.userId
+    WHERE ugh.roomId IN (${roomIdToString});`,
+    { type: QueryTypes.SELECT },
+  );
+  gameHistory.forEach((history: any) => {
+    // eslint-disable-next-line no-param-reassign
+    history.players = [];
+    users.forEach((user: any) => {
+      if (history.roomId === user.roomId) {
+        history.players.push(user.username);
+      }
+    });
+  });
   return gameHistory;
 };
 
