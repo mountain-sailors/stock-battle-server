@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import StatusCode from '../@types/statusCode';
+import { logger } from '../config/logger';
 import playerService from '../services/playerService';
 
 const getPlayersInfo = async (req: Request, res: Response) => {
@@ -9,7 +10,8 @@ const getPlayersInfo = async (req: Request, res: Response) => {
 
     return res.status(StatusCode.OK).json(playersInfo);
   } catch (err) {
-    return res.status(StatusCode.SERVER_ERROR).json('Error occured');
+    logger.error(err);
+    return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }
 };
 

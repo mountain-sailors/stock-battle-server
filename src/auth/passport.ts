@@ -4,6 +4,7 @@ import { JwtPayload } from 'jsonwebtoken';
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
+import { logger } from '../config/logger';
 import userService from '../services/userService';
 
 const JWTStrategy = passportJWT.Strategy;
@@ -32,7 +33,7 @@ const localVerify = async (email: string, password: string, done: Function) => {
     done(null, user);
     return;
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     done(error);
   }
 };
@@ -50,7 +51,7 @@ const jwtVerify = async (jwtPayload: JwtPayload, done: Function) => {
     }
     return done(null, false, { reason: 'Invalid authentication information' });
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return done(error);
   }
 };

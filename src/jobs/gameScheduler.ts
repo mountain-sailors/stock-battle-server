@@ -1,4 +1,5 @@
 import cron from 'node-cron';
+import { logger } from '../config/logger';
 import endGame from '../game/endGame';
 import startGame from '../game/startGame';
 
@@ -13,7 +14,7 @@ const gameScheduler = () => {
     task('*/10 * * * *', startGame).start();
     task('*/10 * * * *', endGame).start();
   } catch (e) {
-    console.log(e);
+    logger.error(e);
   }
 };
 
