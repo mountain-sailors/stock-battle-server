@@ -9,10 +9,10 @@ import sequelize from './models';
 sequelize
   .sync({ force: false })
   .then(() => {
-    console.log('db connect success!');
+    logger.info('DB Connect Success!');
   })
   .catch((err: Error) => {
-    console.error(err);
+    logger.error(err);
   });
 
 // swagger

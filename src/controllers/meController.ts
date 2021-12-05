@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import StatusCode from '../@types/statusCode';
+import { logger } from '../config/logger';
 import userService from '../services/userService';
 
 const getMyInfo = async (req: Request, res: Response) => {
@@ -11,7 +12,8 @@ const getMyInfo = async (req: Request, res: Response) => {
       .status(StatusCode.OK)
       .json({ userId, username, userEmail, point: userInfo?.point, avatar: userInfo?.avatar });
   } catch (err) {
-    return res.status(StatusCode.SERVER_ERROR).json('Error occured');
+    logger.error(err);
+    return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }
 };
 

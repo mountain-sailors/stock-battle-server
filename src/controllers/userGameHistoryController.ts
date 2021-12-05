@@ -25,7 +25,7 @@ const getGameResult = async (req: Request, res: Response) => {
 
     return res.status(StatusCode.OK).json(gameResult);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }
 };

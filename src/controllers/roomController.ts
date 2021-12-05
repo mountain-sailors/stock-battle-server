@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import StatusCode from '../@types/statusCode';
+import { logger } from '../config/logger';
 import roomService from '../services/roomService';
 
 const createRoom = async (req: Request, res: Response) => {
@@ -10,12 +11,12 @@ const createRoom = async (req: Request, res: Response) => {
     }
     const { userId } = req.decoded;
     if (!userId) {
-      return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
+      return res.status(StatusCode.BAD_REQUEST).json('User Information Error');
     }
     const body = await roomService.createRoom(title, maxCapacity, startDate, endDate, winCondition, userId);
     return res.status(StatusCode.OK).json(body);
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }
 };
@@ -24,12 +25,12 @@ const getMyRoomList = async (req: Request, res: Response) => {
   try {
     const { userId } = req.decoded;
     if (!userId) {
-      return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
+      return res.status(StatusCode.BAD_REQUEST).json('User Information Error');
     }
     const body = await roomService.getMyRoomList(userId);
     return res.status(StatusCode.OK).json(body);
   } catch (err) {
-    console.log(err);
+    logger.error(err);
     return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
   }
 };
