@@ -53,12 +53,12 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-const emailValidation = async (req: Request, res: Response) => {
+const verifyEmail = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    const isValidEmail = await userService.checkEmail(email);
+    const info = await userService.verifyEmail(email);
 
-    return res.status(StatusCode.OK).json({ isValidEmail });
+    return res.status(StatusCode.OK).json(info);
   } catch (error) {
     logger.error(error);
     return res.status(StatusCode.SERVER_ERROR).json();
@@ -96,7 +96,7 @@ const deleteAccount = (req: Request, res: Response) => {
 const userController = {
   createAccount,
   login,
-  emailValidation,
+  verifyEmail,
   searchUsers,
   check,
   deleteAccount,

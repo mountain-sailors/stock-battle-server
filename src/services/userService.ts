@@ -2,6 +2,7 @@ import nodemailer from 'nodemailer';
 import { Op } from 'sequelize';
 import { logger } from '../config/logger';
 import User from '../models/User';
+import generateVerificationCode from '../utils/generateVerificationCode';
 
 const createUser = async (username: string, email: string, password: string, avatar: string) => {
   await User.create({
@@ -55,9 +56,10 @@ const deleteUser = (email: string) => {
   });
 };
 
-const checkEmail = async (email: string) => {
+const verifyEmail = async (email: string) => {
   const user = await findUser('email', email, ['id']);
-  if (user !== null) return false;
+  if (user !== null) return { isValidEmail: false, code: null };
+  const code = generateVerificationCode();
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -69,7 +71,7 @@ const checkEmail = async (email: string) => {
     from: process.env.EMAIL, // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
     to: email, // 수신 메일 주소
     subject: '주마주마 이메일 인증 코드', // 제목
-    text: '인증 코드 생성해서 넣기', // 내용
+    text: `Verification Code : ${code}`, // 내용
   };
   transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
@@ -78,7 +80,7 @@ const checkEmail = async (email: string) => {
       logger.info(`Email sent: ${info.response}`);
     }
   });
-  return true;
+  return { isValidEmail: false, code };
 };
 
 const userService = {
@@ -87,7 +89,7 @@ const userService = {
   findUsers,
   searchUsers,
   deleteUser,
-  checkEmail,
+  verifyEmail,
 };
 
 export default userService;
