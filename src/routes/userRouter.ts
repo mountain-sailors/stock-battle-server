@@ -11,5 +11,6 @@ router.get('/search', verifyToken, userController.searchUsers);
 router.get('/check', verifyToken, userController.check);
 router.delete('/', verifyToken, userController.deleteAccount);
 router.put('/password', verifyToken, userController.updatePassword);
+router.post('/forgot-password', userController.sendTemporaryPassword);
 
 export default router;

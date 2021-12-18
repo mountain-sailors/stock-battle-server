@@ -5,7 +5,7 @@ import { calculateProfits } from '../game/calculator';
 import sequelize from '../models';
 import Room from '../models/Room';
 import UserStock from '../models/UserStock';
-import generateInvitationCode from '../utils/generateInvitationCode';
+import { generateInvitationCode } from '../utils/generateInvitationCode';
 import { currentStockPrices } from '../utils/stocks';
 import userGameHistoryService from './userGameHistoryService';
 import userStockService from './userStockService';

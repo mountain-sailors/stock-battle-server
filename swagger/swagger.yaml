@@ -137,7 +137,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  isValidEmail:
+                  isEmailExist:
                     type: boolean
                   code:
                     type: string
@@ -193,6 +193,32 @@ paths:
         200:
           description: password updated
           content: {}
+
+  /user/forgot-password:
+    post:
+      tags:
+        - user
+      summary: Send temporary password email
+      operationId: sendTemporaryPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        200:
+          description: temporary password email sent when an email exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isEmailExist:
+                    type: boolean
 
   /room:
     post:

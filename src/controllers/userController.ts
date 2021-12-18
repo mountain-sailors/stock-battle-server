@@ -106,6 +106,18 @@ const updatePassword = (req: Request, res: Response) => {
   }
 };
 
+const sendTemporaryPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const info = await userService.sendTemporaryPassword(email);
+    console.log(info);
+    return res.status(StatusCode.OK).json(info);
+  } catch (error) {
+    logger.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json();
+  }
+};
+
 const userController = {
   createAccount,
   login,
@@ -114,6 +126,7 @@ const userController = {
   check,
   deleteAccount,
   updatePassword,
+  sendTemporaryPassword,
 };
 
 export default userController;
