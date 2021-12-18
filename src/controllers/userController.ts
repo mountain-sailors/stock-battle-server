@@ -93,6 +93,19 @@ const deleteAccount = (req: Request, res: Response) => {
   }
 };
 
+const updatePassword = (req: Request, res: Response) => {
+  try {
+    const { userEmail } = req.decoded;
+    const { password } = req.body;
+    userService.updatePassword(userEmail, password);
+
+    return res.status(StatusCode.OK).json();
+  } catch (error) {
+    logger.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json();
+  }
+};
+
 const userController = {
   createAccount,
   login,
@@ -100,6 +113,7 @@ const userController = {
   searchUsers,
   check,
   deleteAccount,
+  updatePassword,
 };
 
 export default userController;

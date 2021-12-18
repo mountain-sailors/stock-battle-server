@@ -58,6 +58,11 @@ User.init(
         user.password =
           user.password && user.password !== '' ? bcrypt.hashSync(user.password, bcrypt.genSaltSync(10)) : '';
       },
+      beforeUpdate: (user, option) => {
+        // eslint-disable-next-line no-param-reassign
+        user.password =
+          user.password && user.password !== '' ? bcrypt.hashSync(user.password, bcrypt.genSaltSync(10)) : '';
+      },
     },
   },
 );

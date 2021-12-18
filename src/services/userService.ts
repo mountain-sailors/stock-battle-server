@@ -83,6 +83,18 @@ const verifyEmail = async (email: string) => {
   return { isValidEmail: false, code };
 };
 
+const updatePassword = (email: string, password: string) => {
+  User.update(
+    { password },
+    {
+      where: {
+        email,
+      },
+      individualHooks: true,
+    },
+  );
+};
+
 const userService = {
   createUser,
   findUser,
@@ -90,6 +102,7 @@ const userService = {
   searchUsers,
   deleteUser,
   verifyEmail,
+  updatePassword,
 };
 
 export default userService;
