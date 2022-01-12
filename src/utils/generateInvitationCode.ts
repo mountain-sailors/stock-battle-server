@@ -18,4 +18,4 @@ const generateInvitationCode = async (): Promise<any> => {
   return code;
 };
 
-export default generateInvitationCode;
+export { generateInvitationCode, generateRandomCode };

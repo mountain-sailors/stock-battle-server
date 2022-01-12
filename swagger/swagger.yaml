@@ -51,7 +51,7 @@ paths:
       tags:
         - user
       summary: Create user
-      operationId: createUser
+      operationId: createAccount
       requestBody:
         required: true
         content:
@@ -70,6 +70,15 @@ paths:
       responses:
         200:
           description: User Created
+          content: {}
+    delete:
+      tags:
+        - user
+      summary: Delete user
+      operationId: deleteAccount
+      responses:
+        200:
+          description: User Deleted
           content: {}
   /user/login:
     post:
@@ -109,8 +118,8 @@ paths:
     post:
       tags:
         - user
-      summary: Check for duplicate email address
-      operationId: emailValidationCheck
+      summary: Check for duplicate email address and send email verification code
+      operationId: verifyEmail
       requestBody:
         required: true
         content:
@@ -130,6 +139,8 @@ paths:
                 properties:
                   isEmailExist:
                     type: boolean
+                  code:
+                    type: string
 
   /user/search?username=admin:
     get:
@@ -162,6 +173,52 @@ paths:
                       type: integer
                     avatar:
                       type: string
+
+  /user/password:
+    put:
+      tags:
+        - user
+      summary: Update password
+      operationId: updatePassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+      responses:
+        200:
+          description: password updated
+          content: {}
+
+  /user/forgot-password:
+    post:
+      tags:
+        - user
+      summary: Send temporary password email
+      operationId: sendTemporaryPassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+      responses:
+        200:
+          description: temporary password email sent when an email exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isEmailExist:
+                    type: boolean
 
   /room:
     post:
@@ -260,7 +317,7 @@ paths:
       tags:
         - user history
       summary: User game history
-      operationId: getUserHistory
+      operationId: findUserHistory
       parameters:
         - name: userId
           in: path
@@ -426,10 +483,13 @@ components:
             - MAX_PROFIT_RATE
             - MAX_FLUCTUATION
             - MAX_PROFIT
-          description: |
+          description: '
             * MAX_PROFIT_RATE - 수익률
+
             * MAX_FLUCTUATION - 변동률
-            * MAX_PROFIT - 총수익 (최다 수익)
+
+            * MAX_PROFIT - 총수익 (최다 수익)'
+
     RoomResponse:
       type: object
       properties:
@@ -454,11 +514,14 @@ components:
             - IN_PROGRESS
             - COMPLETED
             - CANCELLED
-          description: |
+          description: '
             * NOT_STARTED - 게임 시작 전
+
             * IN_PROGRESS - 게임중
+
             * COMPLETED - 게임 종료
-            * CANCELLED - 게임 취소 (기간 안에 주식 등록 안될 시)
+
+            * CANCELLED - 게임 취소 (기간 안에 주식 등록 안될 시)'
     UserHistory:
       required:
         - title
@@ -493,10 +556,13 @@ components:
             - MAX_PROFIT_RATE
             - MAX_FLUCTUATION
             - MAX_PROFIT
-          description: |
+          description: '
             * MAX_PROFIT_RATE - 수익률
+
             * MAX_FLUCTUATION - 변동률
+
             * MAX_PROFIT - 총수익 (최다 수익)
+            '
     UserStockRequest:
       type: object
       properties:

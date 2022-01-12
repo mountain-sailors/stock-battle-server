@@ -6,9 +6,11 @@ const router = express.Router();
 
 router.post('/', userController.createAccount);
 router.post('/login', userController.login);
-router.post('/validation', userController.emailValidation);
+router.post('/validation', userController.verifyEmail);
 router.get('/search', verifyToken, userController.searchUsers);
 router.get('/check', verifyToken, userController.check);
 router.delete('/', verifyToken, userController.deleteAccount);
+router.put('/password', verifyToken, userController.updatePassword);
+router.post('/forgot-password', userController.sendTemporaryPassword);
 
 export default router;

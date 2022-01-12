@@ -53,13 +53,12 @@ const login = async (req: Request, res: Response) => {
   }
 };
 
-const emailValidation = async (req: Request, res: Response) => {
+const verifyEmail = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
-    const user = await userService.findUser('email', email, ['id']);
-    const isEmailExist = user !== null;
+    const info = await userService.verifyEmail(email);
 
-    return res.status(StatusCode.OK).json({ isEmailExist });
+    return res.status(StatusCode.OK).json(info);
   } catch (error) {
     logger.error(error);
     return res.status(StatusCode.SERVER_ERROR).json();
@@ -94,13 +93,40 @@ const deleteAccount = (req: Request, res: Response) => {
   }
 };
 
+const updatePassword = (req: Request, res: Response) => {
+  try {
+    const { userEmail } = req.decoded;
+    const { password } = req.body;
+    userService.updatePassword(userEmail, password);
+
+    return res.status(StatusCode.OK).json();
+  } catch (error) {
+    logger.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json();
+  }
+};
+
+const sendTemporaryPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    const info = await userService.sendTemporaryPassword(email);
+    logger.info(info);
+    return res.status(StatusCode.OK).json(info);
+  } catch (error) {
+    logger.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json();
+  }
+};
+
 const userController = {
   createAccount,
   login,
-  emailValidation,
+  verifyEmail,
   searchUsers,
   check,
   deleteAccount,
+  updatePassword,
+  sendTemporaryPassword,
 };
 
 export default userController;
