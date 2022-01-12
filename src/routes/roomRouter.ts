@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/', roomController.createRoom);
 router.get('/', roomController.getMyRoomList);
 router.post('/invitation', roomController.enterRoomByInvitation);
+router.get('/:roomId', roomController.getRoomById);
 router.get('/dashboard/:roomId', dashboardController.getDashboardData);
 
 export default router;
