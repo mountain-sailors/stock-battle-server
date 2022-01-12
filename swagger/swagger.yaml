@@ -201,6 +201,14 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RoomResponse'
+  /room/{roomId}:
+    get:
+      tags:
+        - room
+      summary: get a room information with invitationCode
+      responses:
+        200:
+          description: 성공
   /room/invitation:
     post:
       tags:
