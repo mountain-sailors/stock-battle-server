@@ -110,7 +110,7 @@ const sendTemporaryPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
     const info = await userService.sendTemporaryPassword(email);
-    console.log(info);
+    logger.info(info);
     return res.status(StatusCode.OK).json(info);
   } catch (error) {
     logger.error(error);

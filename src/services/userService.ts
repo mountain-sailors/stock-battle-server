@@ -59,7 +59,7 @@ const deleteUser = (email: string) => {
 
 const verifyEmail = async (email: string) => {
   const user = await findUser('email', email, ['id']);
-  if (user !== null) return { isEmailExist: false, code: null };
+  if (user !== null) return { isEmailExist: true, code: null };
   const code = generateVerificationCode();
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -81,7 +81,7 @@ const verifyEmail = async (email: string) => {
       logger.info(`Email sent: ${info.response}`);
     }
   });
-  return { isEmailExist: true, code };
+  return { isEmailExist: false, code };
 };
 
 const updatePassword = (email: string, password: string) => {
@@ -100,7 +100,6 @@ const sendTemporaryPassword = async (email: string) => {
   const user = await findUser('email', email, ['id']);
   if (user === null) return { isEmailExist: false };
   const password = generateRandomCode().slice(0, 10);
-  console.log(password);
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
