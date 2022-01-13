@@ -5,6 +5,7 @@ phases:
     runtime-versions:
       nodejs: latest
     commands:
+      - sudo chown -R ec2-user build
       - npm install
       - pwd
     run-as: root
