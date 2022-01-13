@@ -1,2 +1,4 @@
-sudo kill -9 `ps -ef | grep 'node ./bin/www' | awk '{print $2}'`
+echo "================kill process & run program======================="
+kill -9 `ps -ef | grep node | awk '{print $2}'`
 nohup npm run dev &
+echo "================================================================="
