@@ -9,5 +9,5 @@ hooks:
       runas: root
 
   ApplicationStart:
-    - location: /start.sh
+    - location: /home/ec2-user/cleanstart.sh
       runas: root
