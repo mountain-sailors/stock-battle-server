@@ -6,8 +6,8 @@ files:
 hooks:
   BeforeInstall:
     - location: /initialize.sh
-      runas: root
+      runas: ec2-user
 
   ApplicationStart:
     - location: /start.sh
-      runas: root
+      runas: ec2-user
