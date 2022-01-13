@@ -1,1 +1,1 @@
-if [ -d "/home/linux/build" ]; then rm -Rf "/home/linux/build"; fi
+if [ -d "/home/ec2-user/build" ]; then rm -Rf "/home/ec2-user/build"; fi
