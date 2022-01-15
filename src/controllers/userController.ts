@@ -65,6 +65,18 @@ const verifyEmail = async (req: Request, res: Response) => {
   }
 };
 
+const verifyUsername = async (req: Request, res: Response) => {
+  try {
+    const { username } = req.body;
+    const info = await userService.verifyUsername(username);
+
+    return res.status(StatusCode.OK).json(info);
+  } catch (error) {
+    logger.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json();
+  }
+};
+
 const searchUsers = async (req: Request, res: Response) => {
   try {
     const { username } = req.query;
@@ -122,6 +134,7 @@ const userController = {
   createAccount,
   login,
   verifyEmail,
+  verifyUsername,
   searchUsers,
   check,
   deleteAccount,

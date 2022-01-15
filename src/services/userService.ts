@@ -84,6 +84,12 @@ const verifyEmail = async (email: string) => {
   return { isEmailExist: false, code };
 };
 
+const verifyUsername = async (username: string) => {
+  const user = await findUser('username', username, ['id']);
+  if (user !== null) return { isNameExist: true };
+  return { isNameExist: false };
+};
+
 const updatePassword = (email: string, password: string) => {
   User.update(
     { password },
@@ -139,6 +145,7 @@ const userService = {
   searchUsers,
   deleteUser,
   verifyEmail,
+  verifyUsername,
   updatePassword,
   sendTemporaryPassword,
 };

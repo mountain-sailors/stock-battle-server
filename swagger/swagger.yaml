@@ -142,6 +142,32 @@ paths:
                   code:
                     type: string
 
+  /user/username:
+    post:
+      tags:
+        - user
+      summary: Check for duplicate username
+      operationId: verifyUsername
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  isNameExist:
+                    type: boolean
+
   /user/search?username=admin:
     get:
       tags:
