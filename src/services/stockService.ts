@@ -25,12 +25,12 @@ const searchStocks = async (value: string) => {
   return stocks;
 };
 
-const updateStocks = async (tickers: string[], prices: any) => {
+const updateStocks = async (data: any[]) => {
   const stocks: object[] = [];
-  for (let i = 0; i < tickers.length; i += 1) {
+  for (let i = 0; i < data.length; i += 1) {
     const tmp = {
-      ticker: tickers[i],
-      price: prices.data[i].price,
+      ticker: data[i].market,
+      price: data[i].trade_price,
     };
     stocks.push(tmp);
   }
