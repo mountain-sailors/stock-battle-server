@@ -28,7 +28,7 @@ const task = () =>
       const url = `https://api.upbit.com/v1/ticker?markets=${oneLineCoin}`;
       const { data } = await axios.get(url);
       updateCurrentPrices(data);
-      stockService.updateStocks(data as []);
+      stockService.updateStocks(data as [], filteredCoin);
     },
     {
       scheduled: true,
