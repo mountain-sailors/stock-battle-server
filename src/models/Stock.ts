@@ -8,6 +8,10 @@ class Stock extends Model {
 
   public price!: number;
 
+  public stockName!: number;
+
+  public timestamp!: number;
+
   public createdAt!: Date;
 }
 
@@ -24,6 +28,14 @@ Stock.init(
     },
     price: {
       type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    stockName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    timestamp: {
+      type: DataTypes.DATE,
       allowNull: false,
     },
   },

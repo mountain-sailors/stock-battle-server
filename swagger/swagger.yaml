@@ -589,6 +589,8 @@ components:
 
             * MAX_PROFIT - 총수익 (최다 수익)
             '
+        stockName:
+          type: string
     UserStockRequest:
       type: object
       properties:
@@ -598,6 +600,8 @@ components:
           type: string
         amount:
           type: integer
+        stockName:
+          type: string
     UserStockResponse:
       type: object
       properties:
@@ -609,6 +613,8 @@ components:
           type: string
         amount:
           type: integer
+        stockName:
+          type: string
     Stock:
       type: object
       properties:
@@ -616,6 +622,8 @@ components:
           type: string
         price:
           type: integer
+        stockName:
+          type: string
     Dashboard:
       type: object
       properties:
@@ -658,3 +666,5 @@ components:
           type: string
         amount:
           type: number
+        stockName:
+          type: string
