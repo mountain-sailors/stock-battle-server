@@ -11,8 +11,8 @@ const task = (time: string, func: () => void) =>
 
 const gameScheduler = () => {
   try {
-    task('*/10 * * * *', startGame).start();
-    task('*/10 * * * *', endGame).start();
+    task('* * * * *', startGame).start();
+    task('* * * * *', endGame).start();
   } catch (e) {
     logger.error(e);
   }

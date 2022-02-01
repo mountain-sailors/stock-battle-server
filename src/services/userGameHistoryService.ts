@@ -5,7 +5,7 @@ const findGameHistory = async (userId: number) => {
   const history = await sequelize.query(
     `SELECT ugh.id, ugh.isWin, ugh.rank, ugh.profit,
     r.id as roomId, r.winCondition, r.title,  r.startDate, r.endDate,
-    us.ticker
+    us.ticker, us.stockName
     FROM user_game_history AS ugh
     LEFT JOIN room AS r
     ON ugh.roomId=r.id
@@ -52,7 +52,7 @@ const getGameHistory = async (userId: number) => {
 const getGameResult = async (roomId: number) => {
   const gameResult = await sequelize.query(
     `SELECT ugh.userId, ugh.isWin, ugh.rank, ugh.profit,
-    us.ticker, us.amount from user_game_history as ugh
+    us.ticker, us.amount, us.stockName from user_game_history as ugh
     INNER JOIN user_stock as us
     ON ugh.roomId=us.roomId and ugh.userId=us.userId
     WHERE ugh.roomId = ${roomId};`,

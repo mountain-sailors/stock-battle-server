@@ -5,11 +5,11 @@ import userStockService from '../services/userStockService';
 
 const registerStock = async (req: Request, res: Response) => {
   try {
-    const { roomId, ticker, amount } = req.body;
-    if (!roomId || !ticker || !amount) return res.status(StatusCode.BAD_REQUEST).json('Invalid Input');
+    const { roomId, ticker, amount, stockName } = req.body;
+    if (!roomId || !ticker || !amount || !stockName) return res.status(StatusCode.BAD_REQUEST).json('Invalid Input');
     const { userId } = req.decoded;
     if (!userId) return res.status(StatusCode.SERVER_ERROR).json('Internal Server Error');
-    const body = await userStockService.registerStock(roomId, ticker, amount, userId);
+    const body = await userStockService.registerStock(roomId, ticker, amount, stockName, userId);
     return res.status(StatusCode.OK).json(body);
   } catch (err: any) {
     logger.error(err);
