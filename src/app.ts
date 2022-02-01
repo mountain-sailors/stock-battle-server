@@ -18,9 +18,9 @@ app.get('/', (req, res) => res.send('Hello Express'));
 app.use(cors());
 app.use(express.static('public'));
 const options = {
-  ca: fs.readFileSync('/etc/letsencrypt/live/stock-battle.p-e.kr/fullchain.pem'),
-  key: fs.readFileSync('/etc/letsencrypt/live/stock-battle.p-e.kr/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/stock-battle.p-e.kr/cert.pem')
+  ca: fs.readFileSync('/etc/letsencrypt/live/zumazuma.o-r.kr/fullchain.pem'),
+  key: fs.readFileSync('/etc/letsencrypt/live/zumazuma.o-r.kr/privkey.pem'),
+  cert: fs.readFileSync('/etc/letsencrypt/live/zumazuma.o-r.kr/cert.pem')
 };
 //https.createServer(app).listen(3000);
 https.createServer(options, app).listen(443);
@@ -39,6 +39,6 @@ app.use(morgan('combined', { stream: myStream }));
 app.use('/api', router);
 
 // scheduler
-initScheduler();
+//initScheduler();
 
 export default app;
