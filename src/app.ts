@@ -39,6 +39,6 @@ app.use(morgan('combined', { stream: myStream }));
 app.use('/api', router);
 
 // scheduler
-//initScheduler();
+initScheduler();
 
 export default app;
