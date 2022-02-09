@@ -107,7 +107,9 @@ const sendTemporaryPassword = async (email: string) => {
   if (user === null) return { isEmailExist: false };
   const password = generateRandomCode().slice(0, 10);
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.EMAIL_PWD,
