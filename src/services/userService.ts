@@ -63,10 +63,14 @@ const verifyEmail = async (email: string) => {
   const code = generateVerificationCode();
   const transporter = nodemailer.createTransport({
     service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL,
       pass: process.env.EMAIL_PWD,
     },
+    from: process.env.EMAIL,
   });
   const mailOptions = {
     from: process.env.EMAIL, // 발송 메일 주소 (위에서 작성한 gmail 계정 아이디)
