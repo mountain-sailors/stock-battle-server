@@ -1,6 +1,7 @@
 import express from 'express';
 import verifyToken from '../auth/jwt';
 import meRouter from './meRouter';
+import oauthRouter from './oauthRouter';
 import playerRouter from './playerRouter';
 import roomRouter from './roomRouter';
 import stockRouter from './stockRouter';
@@ -17,5 +18,6 @@ router.use('/game-history', verifyToken, userGameHistoryRouter);
 router.use('/user-stock', verifyToken, userStockRouter);
 router.use('/me', verifyToken, meRouter);
 router.use('/player', verifyToken, playerRouter);
+router.use('/oauth', oauthRouter);
 
 export default router;
