@@ -14,6 +14,8 @@ class User extends Model {
   public point!: number;
 
   public avatar!: string;
+
+  public type!: string;
 }
 
 User.init(
@@ -35,7 +37,7 @@ User.init(
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     point: {
       type: DataTypes.INTEGER,
@@ -43,6 +45,10 @@ User.init(
       defaultValue: 0,
     },
     avatar: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    type: {
       type: DataTypes.STRING,
       allowNull: false,
     },
