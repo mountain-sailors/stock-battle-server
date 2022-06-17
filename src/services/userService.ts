@@ -5,6 +5,17 @@ import User from '../models/User';
 import { generateRandomCode } from '../utils/generateInvitationCode';
 import generateVerificationCode from '../utils/generateVerificationCode';
 
+const updateUser = async (email: string, username: string, avatar: string) => {
+  await User.update(
+    { username, avatar },
+    {
+      where: {
+        email,
+      },
+    },
+  );
+};
+
 const createUser = async (username: string, email: string, password: string, avatar: string) => {
   await User.create({
     username,
@@ -147,6 +158,7 @@ const sendTemporaryPassword = async (email: string) => {
 };
 
 const userService = {
+  updateUser,
   createUser,
   findUser,
   findUsers,
