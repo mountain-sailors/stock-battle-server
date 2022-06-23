@@ -7,6 +7,23 @@ import StatusCode from '../@types/statusCode';
 import { logger } from '../config/logger';
 import userService from '../services/userService';
 
+const updateUserinfo = async (req: Request, res: Response) => {
+  try {
+    const { username, avatar } = req.body;
+    const { userEmail } = req.decoded;
+    await userService.updateUser(userEmail, username, avatar);
+
+    return res.status(StatusCode.OK).json('Updated');
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      logger.info(error);
+      return res.status(StatusCode.BAD_REQUEST).json();
+    }
+    logger.error(error);
+    return res.status(StatusCode.SERVER_ERROR).json(error);
+  }
+};
+
 const createAccount = async (req: Request, res: Response) => {
   try {
     const { username, email, password, avatar } = req.body;
@@ -131,6 +148,7 @@ const sendTemporaryPassword = async (req: Request, res: Response) => {
 };
 
 const userController = {
+  updateUserinfo,
   createAccount,
   login,
   verifyEmail,

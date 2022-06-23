@@ -77,12 +77,35 @@ const kakaoLogin = async (code: string) => {
   return userinfo.data.kakao_account.email;
 };
 
+const githubLogin = async (code: string) => {
+  console.log(code);
+  const res: any = await axios.post(`https://github.com/login/oauth/access_token`, null, {
+    params: {
+      grant_type: 'authorization_code',
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      redirect_uri: process.env.REDIRECT_URI,
+      code,
+    },
+  });
+  const accessToken = res.data.split('&')[0].split('=')[1];
+  console.log(accessToken);
+  const userinfo: any = await axios.get(`https://api.github.com/user/public_emails`, {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+  console.log(userinfo.data);
+  const email = userinfo.data.filter((el: any) => el.primary === true);
+  console.log(email);
+  return email[0].email;
+};
+
 const oauthService = {
   createUser,
   checkEmail,
   login,
   naverLogin,
   kakaoLogin,
+  githubLogin,
 };
 
 export default oauthService;
