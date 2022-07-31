@@ -3,12 +3,13 @@ import jwt from 'jsonwebtoken';
 import User from '../models/User';
 import generateUsername from '../utils/generateUsername';
 
-const createUser = async (email: string, type: string) => {
+const createUser = async (email: string, key: string, type: string) => {
   const username: string = await generateUsername();
   const avatar: string = '1';
   const user = await User.create({
     username,
     email,
+    key,
     type,
     avatar,
   });
@@ -26,10 +27,25 @@ const checkEmail = async (email: string, type: string) => {
   return { isExist: true, user };
 };
 
-const login = (user: User) => {
-  const token = jwt.sign({ userId: user.id, username: user.username, userEmail: user.email }, process.env.JWT_SECRET!, {
-    expiresIn: '365d',
+const checkKey = async (key: string, type: string) => {
+  const user = await User.findOne({
+    where: {
+      key,
+    },
+    raw: true,
   });
+  if (!user || user.type !== type) return { isExist: false, user };
+  return { isExist: true, user };
+};
+
+const login = (user: User) => {
+  const token = jwt.sign(
+    { userId: user.id, username: user.username, userEmail: user.email, userKey: user.key },
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: '365d',
+    },
+  );
   return token;
 };
 
@@ -45,20 +61,14 @@ const naverLogin = async (code: string) => {
       code,
     },
   });
-  console.log(res.data);
-
   const accessToken = res.data.access_token;
-  console.log(accessToken);
-
   const userinfo: any = await axios.get('https://openapi.naver.com/v1/nid/me', {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-  console.log(userinfo.data.response);
-  return userinfo.data.response.email;
+  return [userinfo.data.response.email, userinfo.data.response.id];
 };
 
 const kakaoLogin = async (code: string) => {
-  console.log(code);
   const res: any = await axios.post(`https://kauth.kakao.com/oauth/token`, null, {
     params: {
       grant_type: 'authorization_code',
@@ -68,17 +78,15 @@ const kakaoLogin = async (code: string) => {
     },
   });
   const accessToken = res.data.access_token;
-  console.log(accessToken);
   const userinfo: any = await axios.get(`https://kapi.kakao.com/v2/user/me`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-  console.log(userinfo.data.kakao_account);
+  console.log(userinfo.data);
 
-  return userinfo.data.kakao_account.email;
+  return [userinfo.data.kakao_account.email, userinfo.data.id];
 };
 
 const githubLogin = async (code: string) => {
-  console.log(code);
   const res: any = await axios.post(`https://github.com/login/oauth/access_token`, null, {
     params: {
       grant_type: 'authorization_code',
@@ -89,19 +97,16 @@ const githubLogin = async (code: string) => {
     },
   });
   const accessToken = res.data.split('&')[0].split('=')[1];
-  console.log(accessToken);
-  const userinfo: any = await axios.get(`https://api.github.com/user/public_emails`, {
+  const data: any = await axios.get(`https://api.github.com/user`, {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
-  console.log(userinfo.data);
-  const email = userinfo.data.filter((el: any) => el.primary === true);
-  console.log(email);
-  return email[0].email;
+  return [null, data.data.id];
 };
 
 const oauthService = {
   createUser,
   checkEmail,
+  checkKey,
   login,
   naverLogin,
   kakaoLogin,

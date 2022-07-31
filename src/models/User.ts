@@ -9,6 +9,8 @@ class User extends Model {
 
   public email!: string;
 
+  public key!: string;
+
   public password!: string;
 
   public point!: number;
@@ -32,9 +34,10 @@ User.init(
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
       unique: true,
     },
+    key: { type: DataTypes.STRING, allowNull: false, unique: true },
     password: {
       type: DataTypes.STRING,
       allowNull: true,
